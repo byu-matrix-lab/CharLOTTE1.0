@@ -14,6 +14,19 @@ CharLOTTE learns these character correspondences with we call **SC models** and 
 
 
 # Installation
+This codebase uses and expects *Conda* environments. The *setup.sh* assumes Conda is already installed and will create two environments `char1.0` and `cop_mt`. It will also install the CopperMT and Fast Align codebases.
+```
+bash setup.sh
+```
+This will cr
+
+## Environments
+You will need two *conda* environments to run this code. The environment names must match!
+```
+conda create
+
+```
+
 ## Clone CopperMT and add new/updated scripts
 From root directory, run these:
 ```
@@ -22,6 +35,8 @@ git clone https://github.com/clefourrier/CopperMT.git
 cd ../CopperMTfiles
 python move_files.py
 ```
+
+## Install Fast align
 
 # Pipeline
 The code for running the main experiments is in the Pipeline directory.
