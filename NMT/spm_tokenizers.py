@@ -80,7 +80,6 @@ class SPMTokenizer():
         if lang is not None and add_lang_token == True:
             spm_sequence = [f"<{lang}>"] + spm_sequence
         idx_sequence = []
-        # TODO Do I need to have it add a bos token? -- Nope! According to ChatGPT anyway :)
         for token in spm_sequence:
             if token not in self.token2idx:
                 token = self.unk

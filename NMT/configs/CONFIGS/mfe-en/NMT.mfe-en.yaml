@@ -1,7 +1,7 @@
 # outputs
 src: mfe
 tgt: en
-save: /home/hatch5o6/nobackup/archive/CognateMT/PredictCognates/mfe-en/NMT.mfe-en
+save: ${DATA_HOME}/CognateMT/PredictCognates/mfe-en/NMT.mfe-en
 test_checkpoint: null
 remove_special_toks: True
 verbose: False
@@ -11,16 +11,16 @@ little_verbose: True
 from_pretrained: null
 
 # data
-train_data: /home/hatch5o6/Cognate/code/NMT/data/CharLOTTE/PLAIN/mfe-en/train.csv
-val_data: /home/hatch5o6/Cognate/code/NMT/data/CharLOTTE/PLAIN/mfe-en/val.csv
-test_data: /home/hatch5o6/Cognate/code/NMT/data/CharLOTTE/PLAIN/mfe-en/test.csv
+train_data: ${CHARLOTTE_HOME}/NMT/data/CharLOTTE/PLAIN/mfe-en/train.csv
+val_data: ${CHARLOTTE_HOME}/NMT/data/CharLOTTE/PLAIN/mfe-en/val.csv
+test_data: ${CHARLOTTE_HOME}/NMT/data/CharLOTTE/PLAIN/mfe-en/test.csv
 append_src_token: False
 append_tgt_token: False
 upsample: False
 sc_model_id: null
 
 # tokenizers
-spm: /home/hatch5o6/nobackup/archive/CognateMT/spm_models/fr-mfe_en/fr-mfe_en/fr-mfe_en
+spm: ${DATA_HOME}/CognateMT/spm_models/fr-mfe_en/fr-mfe_en/fr-mfe_en
 do_char: False
 
 # training

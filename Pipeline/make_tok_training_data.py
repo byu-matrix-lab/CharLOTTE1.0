@@ -1,0 +1,178 @@
+import argparse
+import csv
+import os
+import shutil
+
+def set_env():
+    assert os.path.exists(".env"), f"NO .env FILE FOUND"
+    with open(".env") as env_file:
+        for line in env_file:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, val = line.partition("=")
+                os.environ.setdefault(key.strip(), val.strip())
+
+def get_data(
+    train_csvs,
+    out_dir,
+    SC_MODEL_ID,
+    IS_ATT
+):
+    print("### READING ###")
+    data = read_csvs(
+        fs=train_csvs,
+        SC_MODEL_ID=SC_MODEL_ID,
+        IS_ATT=IS_ATT
+    )
+    print("### WRITING ###")
+    write_data(data, out_dir, SC_MODEL_ID=SC_MODEL_ID)
+
+def make_unique(lines):
+    unique = set()
+    final_lines = []
+    for line in lines:
+        if line in unique:
+            pass
+        else:
+            final_lines.append(line)
+            unique.add(line)
+    return final_lines
+
+def write_data(data, out_dir, SC_MODEL_ID):
+    if os.path.exists(out_dir):
+        print("deleting", out_dir)
+        shutil.rmtree(out_dir)
+    print("creating", out_dir)
+    os.mkdir(out_dir)
+    for lang, fs in data.items():
+        print("--")
+        print(f"Writing {lang}:")
+        out_f = os.path.join(out_dir, f"{lang}.txt")
+        lines = []
+        for f in fs:
+            if "{SC_MODEL_ID}" in f:
+                print("FILE PATH REQUIRES SC_MODEL_ID")
+                print("\t", f)
+                assert SC_MODEL_ID is not None
+                assert isinstance(SC_MODEL_ID, str)
+                assert SC_MODEL_ID.lower() not in ["null", "none"]
+                f = f.replace("{SC_MODEL_ID}", SC_MODEL_ID)
+                print("\tINSERTING SC_MODEL_ID INTO PATH")
+                print("\tFILE now is:", f)
+
+            if not os.path.exists(f):
+                print(f, "DOES NOT EXIST!")
+            assert os.path.exists(f)
+            print(f"\t-{f}")
+            with open(f) as inf:
+                lines += [line.strip() for line in inf.readlines()]
+                print(f"\ttotal lines for {lang} now {len(lines)}")
+        print("TOTAL LINES (BEFORE UNIQUE):", len(lines))
+        print("TOTAL LINES (AFTER UNIQUE):", len(lines))
+        print(f"Writing {lang} data ({len(lines)} lines) to {out_f}")
+        with open(out_f, "w") as outf:
+            outf.write("\n".join(lines) + "\n")
+
+def read_csvs(fs, SC_MODEL_ID, IS_ATT):
+    all_rows = []
+    for csv_f in fs:
+        if not os.path.exists(csv_f):
+            print(csv_f, "DOES NOT EXIST!")
+        print("CSV:", csv_f)
+        assert os.path.exists(csv_f)
+        print("Reading", csv_f)
+        with open(csv_f, newline="") as inf:
+            rows = [row for row in csv.reader(inf)]
+        header = rows[0]
+        rows = [tuple(row) for row in rows[1:]]
+        all_rows += rows
+    
+    data = get_lang_paths(all_rows, SC_MODEL_ID=SC_MODEL_ID, IS_ATT=IS_ATT)
+    return data
+
+def get_lang_paths(rows, SC_MODEL_ID, IS_ATT):
+    assert isinstance(SC_MODEL_ID, str)
+    set_env()
+
+    if SC_MODEL_ID == "null":
+        assert IS_ATT == False
+        model_id_src = None
+        model_id_tgt = None
+        model_id_pair = None
+    else:
+        model_id_src = SC_MODEL_ID.split("-")[0]
+        model_id_tgt = ""
+        for c, char in enumerate(SC_MODEL_ID[len(model_id_src):]):
+            if c == 0:
+                assert char == "-"
+                continue
+            else:
+                if char in ["-", "."]:
+                    break
+            model_id_tgt += char
+        model_id_pair = f"{model_id_src}-{model_id_tgt}"
+        print("model_id_pair:", model_id_pair)
+        print("SC_MODEL_ID:", SC_MODEL_ID)
+        assert SC_MODEL_ID.startswith(model_id_pair)
+        model_id_src = model_id_src.lower()
+        model_id_tgt = model_id_tgt.lower()
+
+    data = {}
+    for src_lang, tgt_lang, src_f, tgt_f in rows:
+        src_f = os.path.expandvars(src_f)
+        tgt_f = os.path.expandvars(tgt_f)
+
+        assert "{SC_MODEL_ID}" not in tgt_f
+        if "{SC_MODEL_ID}" in src_f and IS_ATT:
+            print("SC_MODEL_ID:", SC_MODEL_ID)
+            print("src_f:", src_f)
+            assert src_f.split(".")[-2] == f"SC_{{SC_MODEL_ID}}_{model_id_src}2{model_id_tgt}"
+            assert src_lang == model_id_tgt, f"src_lang: {src_lang}, model_id_tgt: {model_id_tgt}, ({src_lang, tgt_lang, src_f, tgt_f})"
+            assert tgt_lang == model_id_src, f"tgt_lang: {tgt_lang}, model_id_src: {model_id_src}, ({src_lang, tgt_lang, src_f, tgt_f})"
+            assert src_f.split(".")[-2].split("_")[-1] == f"{model_id_src}2{model_id_tgt}"
+            src_lang = f"{model_id_src}2{model_id_tgt}"
+
+        if src_lang not in data:
+            data[src_lang] = []
+        if tgt_lang not in data:
+            data[tgt_lang] = []
+
+        if src_f not in data[src_lang]:
+            data[src_lang].append(src_f)
+        if tgt_f not in data[tgt_lang]:
+            data[tgt_lang].append(tgt_f)
+    return data
+        
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--train_csvs")
+    parser.add_argument("--out_dir")
+    parser.add_argument("--SC_MODEL_ID")
+    parser.add_argument("--IS_ATT", choices=["true", "false"])
+    args = parser.parse_args()
+    print("Arguments:-")
+    for k, v in vars(args).items():
+        print(f"\t-{k}: {v}")
+    print("------------------------------\n")
+    return args
+
+if __name__ == "__main__":
+    print("#############################")
+    print("# make_tok_training_data.py #")
+    print("#############################")
+    args = get_args()
+
+    assert args.IS_ATT in ["true", "false"]
+    IS_ATT = args.IS_ATT == "true"
+    print("-----------------------------")
+    print("IS_ATT:", IS_ATT, type(IS_ATT))
+    print("-----------------------------")
+
+    train_csvs = [c.strip() for c in args.train_csvs.split(",")]
+
+    get_data(
+        train_csvs=train_csvs,
+        out_dir=args.out_dir,
+        SC_MODEL_ID=args.SC_MODEL_ID,
+        IS_ATT=IS_ATT
+    )

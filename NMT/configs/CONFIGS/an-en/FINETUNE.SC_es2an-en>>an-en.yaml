@@ -1,26 +1,26 @@
 # outputs
 src: an
 tgt: en
-save: /home/hatch5o6/nobackup/archive/CognateMT/PredictCognates/an-en/FINETUNE.SC_es2an-en>>an-en
+save: ${DATA_HOME}/CognateMT/PredictCognates/an-en/FINETUNE.SC_es2an-en>>an-en
 test_checkpoint: null
 remove_special_toks: True
 verbose: False
 little_verbose: True
 
 # finetune?
-from_pretrained: /home/hatch5o6/nobackup/archive/CognateMT/PredictCognates/an-en/PRETRAIN.SC_es2an-en_TRIAL_s=1000
+from_pretrained: ${DATA_HOME}/CognateMT/PredictCognates/an-en/PRETRAIN.SC_es2an-en_TRIAL_s=1000
 
 # data
-train_data: /home/hatch5o6/Cognate/code/NMT/data/CharLOTTE/PLAIN/an-en/train.csv
-val_data: /home/hatch5o6/Cognate/code/NMT/data/CharLOTTE/PLAIN/an-en/val.csv
-test_data: /home/hatch5o6/Cognate/code/NMT/data/CharLOTTE/PLAIN/an-en/test.csv
+train_data: ${CHARLOTTE_HOME}/NMT/data/CharLOTTE/PLAIN/an-en/train.csv
+val_data: ${CHARLOTTE_HOME}/NMT/data/CharLOTTE/PLAIN/an-en/val.csv
+test_data: ${CHARLOTTE_HOME}/NMT/data/CharLOTTE/PLAIN/an-en/test.csv
 append_src_token: False
 append_tgt_token: False
 upsample: False
 sc_model_id: ES-AN-RNN-0-RNN-213
 
 # tokenizers
-spm: /home/hatch5o6/nobackup/archive/CognateMT/spm_models/SC_es2an-an_en/SC_es2an-an_en/SC_es2an-an_en
+spm: ${DATA_HOME}/CognateMT/spm_models/SC_es2an-an_en/SC_es2an-an_en/SC_es2an-an_en
 do_char: False
 
 # training

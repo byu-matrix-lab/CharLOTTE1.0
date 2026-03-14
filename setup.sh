@@ -1,9 +1,13 @@
 #!/bin/bash
 
 set -e
-__conda_setup="$('/vapps/rhel9/x86_64/miniconda3/latest/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-eval "$__conda_setup"
-unset __conda_setup
+
+source .env
+
+mkdir ${DATA_HOME}
+mkdir ${DATA_HOME}/CognateMT
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
 
 conda create python=3.10.18 --name char1.0 -y
 conda create python=3.8.20 --name cop_mt -y

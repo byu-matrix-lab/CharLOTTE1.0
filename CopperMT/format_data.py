@@ -42,8 +42,6 @@ def format(
     write_file(tgt_data, tgt_out_f)
 
 def remove_data(og_data, exclude_data):
-    #TODO think through this some more maybe
-    # Not sure if the src_word in ex_src_word criteria is a good one
     new_data = []
     for src_word, tgt_word in og_data:
         for ex_src_word, ex_tgt_word in exclude_data:

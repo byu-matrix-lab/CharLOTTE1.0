@@ -1,7 +1,7 @@
 # CharLOTTE
 This is the code base for **CharLOTTE**, a system that leverages character correspondences between related languages in low-resource NMT. 
 
-**CharLOTTE** stands for **Char**acter-**L**evel **O**rthographic **T**ransfer for **T**oken **E**mbeddings.
+**CharLOTTE** stands for **Char**acter-**L**evel **O**rthographic **T**ransfer for **T**ranslation **E**nhancement.
 
 The CharLOTTE system assumes that the phenomenon of systematic sound correspondence in linguistics is reflected in character correspondences in orthography. For example, *j-lh* and *h-f* correspondences between Spanish and Portugues, seen in word pairs: 
 - *ojo, olho*
@@ -61,12 +61,12 @@ See *Pipeline/cfg/SC* for the .cfg files for all 10 scenarios of these experimen
 - **SEED:** a random seed used in different scripts, such as for randomizing data order
 - **PARALLEL_(TRAIN|VAL|TEST):** Parallel train / val / test data .csv files. These are the parallel data used to train NMT models, and from which congates will be extracted to train the cognate prediction model.
 - **APPLY_TO:** list (comma-delimited, no space) of more data .csv files to apply the cognate prediction model to. Not used by *train_SC.sh* but by *pred_SC.sh*.
-- **NO_GROUPING:** Keep this set to True. Not sure I'll actually experiment with this. It's used when extracting the cognate list from the Fast Align results. Basically, if False, then "grouping" is applied. Don't worry about it. Ask Brendan if you really want to know.
+- **NO_GROUPING:** Keep this set to True. Not sure I'll actually experiment with this. It's used when extracting the cognate list from the Fast Align results. Basically, if False, then "grouping" is applied. Don't worry about it. Ask authors if you really want to know.
 - **SC_MODEL_TYPE:** 'RNN' or 'SMT'. Determines what kind of model will be trained to predict cognates.
 - **COGNATE_TRAIN:** Directory where Fast Align results and cognate word lists are written. The final training data, however, will be created in *COPPERMT_DATA_DIR*. Don't ask why. It's inefficient copying of data in multiple places and I don't want to fix it at this point.
 - **COGNATE_THRESH:** the normalized edit distance threshold to determine cognates. Parallel translation data is given to FastAlign which creats word pairs. Words pairs where the normalized edit distance is less than or equal to *COGNATE_THRESH* are considered cognates.
 - **COPPERMT_DATA_DIR:** Directory where the cognate training data, model checkpoints, and predictions for each scenario will be saved. Each scenario will have its own subdirectory in this directory called *{SRC}_{TGT}_{SMT_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S={SEED}*, *e.g.*, *fr_mfe_RNN-0_S-0*.
-- **COPPERMT_DIR:** The directory where the CopperMT repo was cloned, *e.g*, */home/hatch5o6/Cognate/code/CopperMT/CopperMT*.
+- **COPPERMT_DIR:** The directory where the CopperMT repo was cloned, *e.g*, *${CHARLOTTE_HOME}/CopperMT/CopperMT*.
 - **PARAMETERS_DIR:** A folder to save the CopperMT parameters files
 - **RNN_HYPERPARAMS:** A folder containing RNN hyperparameter files (each containing a hyperparameter set) and a *manifest.json* file mapping an id to each hyperparameter set (file) (RNNs only).
 - **RNN_HYPERPARAMS_ID:** The RNN hyperparameter set (see *RNN_HYPERPARAMS*) to use to train an RNN model (RNNs only).
@@ -87,7 +87,7 @@ We call it SC, which stands for "sound correspondence", but more accurately, wha
 
 **Pipeline/train_SC.sh** is run from /Cognate/code, and takes a single positional argument, one of the *.cfg* config files described [above](#sc-configs), e.g.:
 ```
-bash Pipeline/train_SC.sh /home/hatch5o6/Cognate/code/Pipeline/cfg/SC/fr-mfe.cfg
+bash Pipeline/train_SC.sh ${CHARLOTTE_HOME}/Pipeline/cfg/SC/fr-mfe.cfg
 ```
 
 **Parallel Data .csv files** - *.csv* files defining the NMT parallel training, validation, and test data are referenced in the *.csg* config files and this script. These files **MUST** contain the header ```src_lang, tgt_lang, src_path, tgt_path``` where:
@@ -320,12 +320,12 @@ The parameters file required by the CopperMT module needs to be written, which i
 The SC model is now trained. This is done by calling scripts in the CopperMT module.
 
 **Training an RNN model:**  
-If training an RNN model, *{COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_brendan.sh* script is called, passing in the parameters file created in **3.2.6** (should be *{PARAMETERS_DIR}/parameters.{SRC}-{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}.cfg*) and the *SEED*. 
+If training an RNN model, *{COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_CharLOTTE.sh* script is called, passing in the parameters file created in **3.2.6** (should be *{PARAMETERS_DIR}/parameters.{SRC}-{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}.cfg*) and the *SEED*. 
 
 After training, the best RNN checkpoint is selected, using *Pipeline/select_checkpoint.py*. This selects the best performing checkpoint, based on BLEU score calculated by CopperMT, from those in a directory that contains checkpoints and outputs. This directory is set to variable *WORKSPACE_SEED_DIR*, which should be *COPPERMT_DATA_DIR/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/workspace/reference_models/bilingual/rnn_{SRC}-{TGT}/{SEED}*. *Pipeline/select_checkpoint.py* will save the best checkpoint to *{WORKSPACE_SEED_DIR}/checkpoints/selected.pt*. All other checkpoints will be deleted to conserve storage space.
 
 **Training an SMT model:**  
-If training an SMT model, *{COPPERMT_DIR}/pipeline/main_smt_full_brendan.sh* is run, passing the same parameters file from **3.2.6** and *SEED*.
+If training an SMT model, *{COPPERMT_DIR}/pipeline/main_smt_full_CharLOTTE.sh* is run, passing the same parameters file from **3.2.6** and *SEED*.
 
 
 
@@ -340,20 +340,20 @@ A couple directories, if pre-existing, are deleted.
 To calculate scores, inference is first run on the test set.
 
 **Inference with an RNN model**  
-To run inference with an RNN model, *{COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_brendan_PREDICT.sh* is called, passing the Copper MT parameters file from **3.2.6** (*PARAMETERS_F*), the path to the selected RNN checkpoint from **3.2.7** (*SELECTED_RNN_CHECKPOING*), *SEED*, an indicator "test", *NBEST*, and *BEAM*. This script will save its results to a file whose path is saved to the variable *HYP_OUT_TXT*. This path should be *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/workspace/reference_models/bilingual/rnn_{SRC}-{TGT}/{SEED}/results/test_selected_checkpoint_{SRC}_{TGT}.{TGT}/generate-test.txt*.
+To run inference with an RNN model, *{COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_CharLOTTE_PREDICT.sh* is called, passing the Copper MT parameters file from **3.2.6** (*PARAMETERS_F*), the path to the selected RNN checkpoint from **3.2.7** (*SELECTED_RNN_CHECKPOING*), *SEED*, an indicator "test", *NBEST*, and *BEAM*. This script will save its results to a file whose path is saved to the variable *HYP_OUT_TXT*. This path should be *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/workspace/reference_models/bilingual/rnn_{SRC}-{TGT}/{SEED}/results/test_selected_checkpoint_{SRC}_{TGT}.{TGT}/generate-test.txt*.
 
 The model hypotheses need to be extracted from the *HYP_OUT_TXT* file, which is done with the **NMT/hr_CopperMT.py** script. This script has three modes: "prepare", "retrieve", and "get_test_results". Modes "prepare" and "retrieve" will be discussed later in connection to *pred_SC.sh* [below](#24-apply-sc) To extract the hypotheses from the model test results file, we use mode "get_test_results". Only the parameters relevant to this mode are shown here. This mode will write the hypotheses to a file parallel to the source file, where on each line is simply the cognate hypothesis for each source word.
 
 **NMT/hr_CopperMT.py (get_test_results)**
 * *--function, -F:* The script mode. In this case, it should be "get_test_results".
 * *--test_src:* The test source sentences. Should be *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/inputs/split_data/{SRC}_{TGT}/{SEED}/test_{SRC}_{TGT}.{SRC}* (saved to variable *SRC_TEXT*).
-* *--data:* The model results, written by *main_nmt_bilingual_full_brendan_PREDICT.sh*. The path is saved to *HYP_OUT_TXT*.
+* *--data:* The model results, written by *main_nmt_bilingual_full_CharLOTTE_PREDICT.sh*. The path is saved to *HYP_OUT_TXT*.
 * *--out:* The path to save the hypotheses extracted from the model results file. Should be *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/workspace/reference_models/bilingual/rnn_{SRC}-{TGT}/{SEED}/results/test_selected_checkpoint_{SRC}_{TGT}.{TGT}/generate-test.hyp.txt* (saved to *TEST_OUT_F*).
 
 The path to write the scores for an RNN model (set to variable *SCORES_OUT_F*) is then set to *{COPPERMT_DATA_DIR}/{SRC}_${TGT}_${SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/workspace/reference_models/bilingual/rnn_{SRC}-{TGT}/{SEED}/results/test_selected_checkpoint_{SRC}_{TGT}.{TGT}/generate-test.hyp.scores.txt*. This path will be used in **4.3**.
 
 **Inference with an SMT model**  
-To run inference with an SMT model, *{COPPERMT_DIR}/pipeline/main_smt_full_brendan_PREDICT.sh* is run, passing in the Copper MT parameters file from **3.2.6** (*PARAMETERS_F*), the file path of the source sentences (*SRC_TEXT*), a template for the outputs (*HYP_OUT*), and *SEED*. The hypotheses will be written to *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/inputs/split_data/{SRC}_{TGT}/{SEED}/test_{SRC}_{TGT}.{TGT}.hyp.txt* (saved to variable *TEST_OUT_F*).
+To run inference with an SMT model, *{COPPERMT_DIR}/pipeline/main_smt_full_CharLOTTE_PREDICT.sh* is run, passing in the Copper MT parameters file from **3.2.6** (*PARAMETERS_F*), the file path of the source sentences (*SRC_TEXT*), a template for the outputs (*HYP_OUT*), and *SEED*. The hypotheses will be written to *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/inputs/split_data/{SRC}_{TGT}/{SEED}/test_{SRC}_{TGT}.{TGT}.hyp.txt* (saved to variable *TEST_OUT_F*).
 
 The path to write the scores for an SMT model (set to variable *SCORES_OUT_F*) is then set to *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}/inputs/split_data/{SRC}_{TGT}/{SEED}/test_{SRC}_{TGT}.{TGT}.hyp.scores.txt*. This path will be used in **4.3**.
 
@@ -372,7 +372,7 @@ This documentation is designed to walk you through the *Pipeline/pred_SC.sh* scr
 
 **Pipeline/pred_SC.sh** runs inference of an SC model. It is run from /Cognate/code, and takes a single positional argument, one of the *.cfg* config files described [above](#sc-configs), e.g.:
 ```
-bash Pipeline/pred_SC.sh /home/hatch5o6/Cognate/code/Pipeline/cfg/SC/fr-mfe.cfg
+bash Pipeline/pred_SC.sh ${CHARLOTTE_HOME}/Pipeline/cfg/SC/fr-mfe.cfg
 ```
 
 For each parallel data .csv file in *PARALLEL_(TRAIN|VAL|TEST)* and *APPLY_TO*, this script looks for any source or target sentence file in the *.csv* for the language *SRC* -- that is, even if there is a target file in the *.csv* for the language *SRC* it will be included -- and applies the SC model to *each* word of *each* sentence and then saves the result to a new file. We then have data in the *SRC* language that is made more similary to the *TGT* language based on learned character correspondences.
@@ -441,7 +441,7 @@ To do this, words from the text files need to be prepared for the SC model. This
 Afterwards, we can run inference.
 
 **Inference with RNN model**
-If infering with an RNN model, we run *{COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_brendan_PREDICT.sh*, passing in the CopperMT parameters file (*PARAMETERS_F*) from **2.1**, the path to the best checkpoint (*SELECTED_RNN_CHECKPOINT*) from **2.2**, *SEED*, the tag "inference", *NBEST*, and *BEAM*.
+If infering with an RNN model, we run *{COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_CharLOTTE_PREDICT.sh*, passing in the CopperMT parameters file (*PARAMETERS_F*) from **2.1**, the path to the best checkpoint (*SELECTED_RNN_CHECKPOINT*) from **2.2**, *SEED*, the tag "inference", *NBEST*, and *BEAM*.
 
 This will predict the cognates for each of the words in our list created by *hr_CopperMT.py (prepare)*. Its output will be saved to the path *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_RNN-{RNN_HYPERPARAMS_ID}_S-{SEED}/workspace/reference_models/bilingual/rnn_{SRC}-{TGT}/{SEED}/results/inference_selected_checkpoint_{SRC}_{TGT}.{TGT}/generate-test.txt*, which is saved to variable *COPPERMT_RESULTS*. Then we run NMT/hr_CopperMT.py in "retrieve" mode, which for each word in the high resource text files, it replaces it with its predicted cognate.
 
@@ -455,7 +455,7 @@ This will predict the cognates for each of the words in our list created by *hr_
 
 
 **Inference with SMT model**
-If inferring with an SMT model, we run *{COPPERMT_DIR}/pipeline/main_smt_full_brendan_PREDICT.sh*, passing in the CopperMT parameters file (*PARAMETERS_F*) from **2.1**, the file path of the source sentences (*TEXT*), a template for the outputs (*HYP_OUT*), and *SEED*. This functions similarily to inference with the RNN model, where it's predicting cognates for each word in the list created by *hr_CopperMT.py (prepare)*. The outputs are written to *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_SMT-null_S-{SEED}/inputs/split_data/{SRC}_{TGT}/inference/test_{SRC}_{TGT}.{TGT}.hyp.txt*, which is saved to variable *HYP_OUT_F*. We then run *NMT/hr_CopperMT.py* in "retrieve" mode, which for each word in the high resource text files, it replaces it with its predicted cognate.
+If inferring with an SMT model, we run *{COPPERMT_DIR}/pipeline/main_smt_full_CharLOTTE_PREDICT.sh*, passing in the CopperMT parameters file (*PARAMETERS_F*) from **2.1**, the file path of the source sentences (*TEXT*), a template for the outputs (*HYP_OUT*), and *SEED*. This functions similarily to inference with the RNN model, where it's predicting cognates for each word in the list created by *hr_CopperMT.py (prepare)*. The outputs are written to *{COPPERMT_DATA_DIR}/{SRC}_{TGT}_SMT-null_S-{SEED}/inputs/split_data/{SRC}_{TGT}/inference/test_{SRC}_{TGT}.{TGT}.hyp.txt*, which is saved to variable *HYP_OUT_F*. We then run *NMT/hr_CopperMT.py* in "retrieve" mode, which for each word in the high resource text files, it replaces it with its predicted cognate.
 
 **NMT/hr_CopperMT.py (retrieve), for SMT**
 The parameters passed in "retrieve" mode for SMT model results are exactly the same as those for RNN model results **EXCEPT** instead of **--CopperMT_results**, we use the parameter **--CopperMT_SMT_results**, which will be set to the output of the SMT model, saved to the variable *HYP_OUT_F* described above.

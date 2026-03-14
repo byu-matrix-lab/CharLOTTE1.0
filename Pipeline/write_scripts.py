@@ -1,7 +1,6 @@
 import argparse
 import os
 
-COPPERMT_DIR="/home/hatch5o6/Cognate/code/CopperMT/CopperMT"
 parameters_stensil = """
 MEDeA_DIR="{COPPERMT_DATA_DIR}/{SC_MODEL_ID}_{SC_MODEL_TYPE}-{RNN_HYPERPARAMS_ID}_S-{SEED}"
 
@@ -11,7 +10,7 @@ lang="{SRC}-{TGT}"
 
 DATA_NAME="{SRC}_{TGT}"
 
-MOSES_DIR="/home/hatch5o6/Cognate/code/CopperMT/CopperMT/submodules"
+MOSES_DIR="${CHARLOTTE_HOME}/CopperMT/CopperMT/submodules"
 """.strip()
 
 sbatch_preamble = """
@@ -25,13 +24,10 @@ sbatch_preamble = """
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user thebrendanhatch@gmail.com
-#SBATCH --output /home/hatch5o6/Cognate/code/Pipeline/slurm_outputs/%x.out
+#SBATCH --mail-user %u@byu.edu
+#SBATCH --output Pipeline/slurm_outputs/%x.out
 #SBATCH --job-name={JOB_NAME}
 """.strip()
-
-# SBATCH_DIR = "/home/hatch5o6/Cognate/code/Pipeline/sbatch"
-# Will somehow need to select the best model and choose it for prediction.
 
 def write(
     src,
@@ -47,9 +43,6 @@ def write(
 
 def write_parameters(coppermt_data_dir, f, src, tgt, sc_model_type, rnn_hyperparams_id, seed, sc_model_id):
     assert f.endswith(".cfg")
-    # ending = f"{src}-{tgt}.cfg"
-    # if not f.endswith(ending):
-    #     f = f[:-3] + f"{src}-{tgt}.cfg"
 
     content = parameters_stensil
     content = content.replace("{COPPERMT_DATA_DIR}", coppermt_data_dir)

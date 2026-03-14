@@ -23,23 +23,9 @@ nltk_tokenize_langs = {
     "hsb": "czech",
     "cs": "czech",
     "en": "english",
-    "enx": "english",
-    "eny": "english",
     "djk": "english",
-    "NGfr": "french",
-    "NGmfe": "french",
     "fr": "french",
-    "frx": "french",
-    "fry": "french",
-    "mfe": "french",
-    "mfx": "french",
-    "mfy": "french",
-    
-    # fake langs for testing:
-    "bren": "french",
-    "dan": "french",
-    "tho": "czech",
-    "mas": "czech"
+    "mfe": "french"
 }
 
 print("loading spacy tokenizer")
@@ -48,11 +34,8 @@ es_nlp = spacy.load('es_core_news_sm', exclude=["tagger", "parser", "ner", "lemm
 multi_nlp = spacy.load('xx_sent_ud_sm', exclude=["tagger", "parser", "ner", "lemmatizer", "textcat", "custom", "entity_linker", "entity_ruler", "textcat_multilabel", "trainable_lemmatizer", "morphologizer", "attribute_ruler", "senter", "sentencizer", "tok2vec", "transformer"])
 spacy_nlp = {
     "es": es_nlp,
-    "esx": es_nlp,
     "an": es_nlp,
-    "anx": es_nlp,
     "oc": es_nlp,
-    "ast": es_nlp,
 
     "lua": multi_nlp,
     "bem": multi_nlp,
@@ -64,12 +47,6 @@ from parallel_datasets import MultilingualDataset
 from torch.utils.data import DataLoader
 
 UNK_TOK_STANDIN = "ξ"
-
-# EOS = "<EOS>"
-
-# function for preparing HR lang data for preprocessing (applying sound correspondences with CopperMT)
-def read_csv(f):
-    pass
 
 def prepare_for_CopperMT(
     data_f,
@@ -172,17 +149,6 @@ def prepare_for_CopperMT(
         print(f"Using nltk_tokenize, lang={hr_lang}")
         word_tokenize = nltk_tokenize
 
-    # print("Tokenizing")
-    # tokens = []
-    # for line in tqdm(data):
-    #     line_tokens = line.split()
-    #     line_tokens.append(EOS) # add end of sentence indicator
-    #     tokens += line_tokens
-    # tokens_out_f = os.path.join(out_dir, f"tokens_{hr_lang}_{lr_lang}.{hr_lang}")
-    # print("writing tokens to", tokens_out_f)
-    # with open(tokens_out_f, "w") as outf:
-    #     outf.write("\n".join(tokens) + "\n")
-
     print("Formatting")
     just_words = []
     for line in tqdm(data):
@@ -193,12 +159,6 @@ def prepare_for_CopperMT(
             just_words += [
             " ".join(w) for w in words 
             if w not in punctuation and w != ""]
-
-        # words = word_tokenize(line, lang=hr_lang)
-        # words = [clean_word(w) for w in words]
-        # just_words += [
-        #     " ".join(w) for w in words 
-        #     if w not in punctuation and w != ""]
 
     just_words = sorted(list(set(just_words)))
     just_words_out_f = os.path.join(out_dir, f"test_{hr_lang}_{lr_lang}.{hr_lang}")
@@ -239,11 +199,6 @@ def retrieve(
 
     if CopperMT_results_f is not None:
         CopperMT_results = read_CopperMT_Results(CopperMT_results_f, log_p_thresh=log_p_thresh)
-        import json
-        f = "/home/hatch5o6/Cognate/code/NMT/CopperMT_RNN_RESULTS.json"
-        print("Writing to", f)
-        with open(f, "w") as outf:
-            outf.write(json.dumps(CopperMT_results, ensure_ascii=False, indent=2))
     else:
         assert CopperMT_SMT_results_src_f is not None
         assert CopperMT_SMT_results_tgt_f is not None
@@ -252,11 +207,6 @@ def retrieve(
             results_hyp=CopperMT_SMT_results_tgt_f,
             log_p_thresh=log_p_thresh
         )
-        import json
-        f = "/home/hatch5o6/Cognate/code/NMT/CopperMT_SMT_RESULTS.json"
-        print("Writing to", f)
-        with open(f, "w") as outf:
-            outf.write(json.dumps(CopperMT_results, ensure_ascii=False, indent=2))
 
     USE_FINAL_RESULTS_F = True
     if data_f.endswith(".csv"):
@@ -309,8 +259,6 @@ def retrieve(
                     if cleaned_word in CopperMT_results:
                         word_result = CopperMT_results[cleaned_word]
                         assert isinstance(word_result, str)
-                        # We are not converting unknown char to <unk> and then retrieving results (which might be a list rather than a str)
-                        # Words with an unknown char we'll just skip. The predictions look noisy. I think we might be better off just keeping words with unk chars as is in the original data.
                         word = word.replace(cleaned_word, word_result)
                     else:
                         NOT_IN_COPPER_MT_RESULTS.add(cleaned_word)
@@ -318,17 +266,6 @@ def retrieve(
                 token = "".join(token_words)
                 tokens[t] = token
             line = " ".join(tokens)
-
-            # line_words = word_tokenize(line, lang=hr_lang)
-            # for w, word in enumerate(line_words):
-            #     cleaned_word = clean_word(word)
-            #     assert cleaned_word in word
-            #     if cleaned_word in CopperMT_results:
-            #         word = word.replace(cleaned_word, CopperMT_results[cleaned_word])
-            #     else:
-            #         NOT_IN_COPPER_MT_RESULTS.add(cleaned_word)
-            #     line_words[w] = word.strip()
-            # line = " ".join(line_words).strip()
                 
             new_data.append(line)
 
@@ -369,8 +306,6 @@ def get_test_results(source_f, source_vocab_f, results_f, out_f):
     NOT_IN_RESULTS = []
     for og_src_word in source:
         src_word = og_src_word
-        # print("SRC WORD:", src_word)
-        # assert src_word in results.keys()
 
         for char in oov:
             src_word = src_word.replace(char, UNK_TOK_STANDIN)
@@ -380,7 +315,6 @@ def get_test_results(source_f, source_vocab_f, results_f, out_f):
             print(f"src_word `{src_word}` not in results. Will try replacing _ with <unk>: ")
             src_word = src_word.replace("_", "<unk>")
             print(f"\tFixed src_word: `{src_word}`")
-            # assert src_word in results.keys()
 
         if src_word != og_src_word:
             print(f"Converted source word `{og_src_word}` to `{src_word}`")
@@ -457,11 +391,6 @@ def read_CopperMT_SMT_RESULTS(results_src, results_hyp, log_p_thresh=None):
 def read_CopperMT_Results(results_f, RETURN_SPACED=False, log_p_thresh=None):
     with open(results_f) as inf:
         lines = [line.strip() for line in inf.readlines()]
-    
-    # print("\nLAST 10 LINES IN LINES")
-    # for line in lines[-10:]:
-    #     print(line)
-    # print("\n\n")
 
     data_rows = []
     for lx, line in enumerate(lines):
@@ -483,11 +412,6 @@ def read_CopperMT_Results(results_f, RETURN_SPACED=False, log_p_thresh=None):
                 line.startswith("P-"),
             ]), f"line ({lx}) `{line}` does not begin with S-, T-, H-, D-, or P-"
             data_rows.append(line)
-    
-    # print("\nLAST 10 LINES IN DATA ROWS")
-    # for line in data_rows[-10:]:
-    #     print(line)
-    # print("\n\n")
 
     print("Blocking CopperMT")
     data = []
@@ -501,19 +425,8 @@ def read_CopperMT_Results(results_f, RETURN_SPACED=False, log_p_thresh=None):
         assert len(block) == 5
         data.append(tuple(block))
 
-    # print("\nLAST 3 BLOCKS IN DATA")
-    # for block in data[-3:]:
-    #     print(block)
-    # print("\n\n")
-
-    # print("Data")
-    # for i in data[:5]:
-    #     print(type(i), i)
-
     print("Getting Copper MT results")
-    # results = {'<unk>': []}
     results = {}
-    # results_list = []
     visited_ids = set()
     ct_low_conf = 0
     for S, T, H, D, P in tqdm(data):
@@ -549,7 +462,6 @@ def read_CopperMT_Results(results_f, RETURN_SPACED=False, log_p_thresh=None):
             print("RNN confidence <= threshold, setting hyp=source")
             hyp = source
             ct_low_conf += 1
-        # results_list.append((source, hyp))
         if source in results:
             print("SOURCE IN RESULTS")
             print("source:", source)
@@ -562,17 +474,12 @@ def read_CopperMT_Results(results_f, RETURN_SPACED=False, log_p_thresh=None):
             if source not in results:
                 results[source] = hyp
             else:
-                # print(f"TRYING TO SET results['{source}'] (='{results[source]}') to {hyp}")
-                # assert results[source] == hyp
                 if isinstance(results[source], str):
                     results[source] = [results[source]]
                 assert isinstance(results[source], list)
                 if hyp not in results[source]:
                     results[source].append(hyp)
 
-    # if RETURN_LIST:
-    #     return results_list
-    # else:
     print(f"RNN: NUMBER OF LOW CONFIDENCE (< {log_p_thresh}) PREDICTIONS: {ct_low_conf} / {len(data)} unique words predicted, {round((ct_low_conf / len(data)) * 100, 2)}%")
     return results
 
@@ -590,7 +497,6 @@ def make_file(f, times=1):
 
 def spacy_tokenize(line, lang):
     global spacy_nlp
-    # print(f"spacy_tokenize lang={lang}")
     doc = spacy_nlp[lang](line)
     tokens = [tok.text for tok in doc]
     final_tokens = []
@@ -601,7 +507,6 @@ def spacy_tokenize(line, lang):
     return final_tokens
 
 def nltk_tokenize(line, lang):
-    # print(f"nltk_tokenize lang={lang}")
     global nltk_tokenize_langs
     wtlang = nltk_tokenize_langs[lang]
     tokens = NLTK_word_tokenize(line.strip(), language=wtlang)
@@ -634,8 +539,6 @@ def camel_tokenize(line, lang):
             final_tokens.append(subtok.strip())
     return final_tokens
 
-
-
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data")
@@ -646,14 +549,11 @@ def get_args():
     parser.add_argument("-lr", "--lr_lang")
     parser.add_argument("--training_data")
     parser.add_argument("--limit_lang")
-    parser.add_argument("-R", "--CopperMT_results", 
-                        # default="/home/hatch5o6/nobackup/archive/CopperMT/workspace/reference_models/bilingual/rnn_es-an/0/results/inference_checkpoint_best_es_an.an/generate-test.txt"
-    )
+    parser.add_argument("-R", "--CopperMT_results")
     parser.add_argument("-S", "--CopperMT_SMT_results", help="comma-delimited list, must be len 2, src file first, hyp file second (e.g. src_file.txt,hyp_file.txt")
     parser.add_argument("-F", "--function", choices=["prepare", "retrieve", "get_test_results"], default="prepare")
     parser.add_argument("-M", "--MODEL_ID", default="")
     parser.add_argument("-lt", "--log_p_thresh", default='null', type=str, help="Log probability threshold for RNN model inference")
-    # parser.add_argument("-st", "--smt_thresh", default=None, type=float, help="SMT score threshold for SMT inference")
     args = parser.parse_args()
     print("Arguments:-")
     for k, v in vars(args).items():
@@ -703,7 +603,6 @@ if __name__ == "__main__":
             lr_lang=args.lr_lang,
             MODEL_ID=args.MODEL_ID,
             log_p_thresh=LOG_P_THRESH
-            # smt_thresh=args.smt_thresh
         )
     elif args.function == "get_test_results":
         print("RUNNING 'get_test_results'")

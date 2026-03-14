@@ -2,9 +2,9 @@
 
 set -e
 
-__conda_setup="$('/vapps/rhel9/x86_64/miniconda3/latest/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-eval "$__conda_setup"
-unset __conda_setup
+source .env
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
 
 echo "Starting pred_SC.sh------------"
 date
@@ -135,8 +135,8 @@ for f in ${ALL_CSV_FILES[@]} ; do
         if [ $SC_MODEL_TYPE = "RNN" ]
         then
             conda activate copper
-            echo "    main_nmt_bilingual_full_brendan_PREDICT.sh ${PARAMETERS_F} ${SELECTED_RNN_CHECKPOINT} ${SEED} inference ${NBEST} ${BEAM}"
-            bash "main_nmt_bilingual_full_brendan_PREDICT.sh" "${PARAMETERS_F}" "${SELECTED_RNN_CHECKPOINT}" "${SEED}" "inference" "${NBEST}" "${BEAM}"
+            echo "    main_nmt_bilingual_full_CharLOTTE_PREDICT.sh ${PARAMETERS_F} ${SELECTED_RNN_CHECKPOINT} ${SEED} inference ${NBEST} ${BEAM}"
+            bash "main_nmt_bilingual_full_CharLOTTE_PREDICT.sh" "${PARAMETERS_F}" "${SELECTED_RNN_CHECKPOINT}" "${SEED}" "inference" "${NBEST}" "${BEAM}"
             COPPERMT_RESULTS=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/workspace/reference_models/bilingual/rnn_${SRC}-${TGT}/${SEED}/results/inference_selected_checkpoint_${SRC}_${TGT}.${TGT}/generate-test.txt
 
             conda activate sound
@@ -154,8 +154,8 @@ for f in ${ALL_CSV_FILES[@]} ; do
             conda activate copper
             TEXT=$COPPER_MT_PREP_OUT_DIR/test_${SRC}_${TGT}.${SRC}
             HYP_OUT=$COPPER_MT_PREP_OUT_DIR/test_${SRC}_${TGT}.${TGT}
-            echo "    main_smt_full_brendan_PREDICT.sh ${PARAMETERS_F} ${TEXT} ${HYP_OUT} ${SEED}"
-            bash "main_smt_full_brendan_PREDICT.sh" "${PARAMETERS_F}" "${TEXT}" "${HYP_OUT}" "${SEED}"
+            echo "    main_smt_full_CharLOTTE_PREDICT.sh ${PARAMETERS_F} ${TEXT} ${HYP_OUT} ${SEED}"
+            bash "main_smt_full_CharLOTTE_PREDICT.sh" "${PARAMETERS_F}" "${TEXT}" "${HYP_OUT}" "${SEED}"
             
             HYP_OUT_F=$HYP_OUT.hyp.txt
             conda activate sound

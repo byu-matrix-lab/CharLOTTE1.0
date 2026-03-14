@@ -16,7 +16,6 @@ def make_word_list(sent_pairs, alignments, VERBOSE=False, STOP=None):
             print(src_sent)
             print(tgt_sent)
             print(word_alignments)
-        # should already be tokenized and joined on whitespace, so no need for word_tokenize function
             
         # Found a NBSP in a fon (or ewe, but I think fon) sent, so we need to handle that.
         FOUND_NBSP = False
@@ -116,6 +115,3 @@ if __name__ == "__main__":
         for ct, (word_a, word_b) in word_list_ordered:
             outf.write(f"{ct} ||| {word_a.strip()} ||| {word_b.strip()}\n")
 
-    # with open(args.out, "w") as outf:
-    #     for word_a, word_b in word_list.keys():
-    #         outf.write(f"{word_a.strip()} ||| {word_b.strip()}\n")

@@ -137,7 +137,6 @@ def write_new_set(pairs, prefix, src, tgt, format_out_dir):
     return src_out_f, tgt_out_f
 
 def remove_overlap(train_pairs, fine_tune_pairs, test_pairs):
-    # train_src_set, train_tgt_set =              get_src_tgt_sets(train_pairs)
     fine_tune_src_set, fine_tune_tgt_set =      get_src_tgt_sets(fine_tune_pairs)
     test_src_set, test_tgt_set =                get_src_tgt_sets(test_pairs)
 

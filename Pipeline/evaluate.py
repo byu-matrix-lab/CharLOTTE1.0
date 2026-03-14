@@ -54,14 +54,16 @@ def read_bleu_from_fairseq_hyp(f):
     return bleu_stuff
 
 if __name__ == "__main__":
-    print("evaluate.py")
+    print("########################")
+    print("# Pipeline/evaluate.py #")
+    print("########################")
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--ref")
     parser.add_argument("--hyp")
     parser.add_argument("--out")
     parser.add_argument("--target_vocab", default="null")
-    parser.add_argument("--hyp_out_txt", default="null", help="path to output from the CopperMT inference (made from fairseq-generate in main_nmt_bilingual_full_brendan_PREDICT.sh), should end with generate-valid.txt")
+    parser.add_argument("--hyp_out_txt", default="null", help="path to output from the CopperMT inference (made from fairseq-generate in main_nmt_bilingual_full_CharLOTTE_PREDICT.sh), should end with generate-valid.txt")
     parser.add_argument("--REPLACE_UNK", action="store_true", default=False, help="if passed, will replace unknown tokens `?` and `>` with `<unk>` in reference")
     args = parser.parse_args()
     print("Arguments:")
@@ -77,13 +79,8 @@ if __name__ == "__main__":
         assert UNK_TOK_STANDIN not in oov, f"UNK_TOK_STANDIN `{UNK_TOK_STANDIN}` is in oov!"
         print(f"OUT OF VOCAB TOKS (len: {len(oov)}): {oov}")
         for rx, r in enumerate(ref):
-            # print("-----")
-            # r = r.replace("?", "<<unk>>")
-            # r = r.replace(">", "<<unk>>")
             new_r = r
             for tok in oov:
-                # print("replacing", tok, "with <<unk>>")
-                # print(f"replacing `{tok}` with <<unk>>")
                 new_r = new_r.replace(tok, UNK_TOK_STANDIN)
             new_r = new_r.replace(UNK_TOK_STANDIN, "<unk>")
             if r != new_r:

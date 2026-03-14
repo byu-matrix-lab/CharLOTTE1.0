@@ -8,11 +8,11 @@ seed=$3
 predict_type=$4 #'inference' or 'test' # replace 'inference' throughout script with this variable
 if [ $predict_type = 'test' ]
 then
-    echo "in main_nmt_bilingual_full_brendan_PREDICT.sh, predict_type='test', setting to seed ${seed}"
+    echo "in main_nmt_bilingual_full_CharLOTTE_PREDICT.sh, predict_type='test', setting to seed ${seed}"
     predict_type=$seed
     PRED_TYPE=test
 else
-    echo "in main_nmt_bilingual_full_brendan_PREDICT.sh, predict_type='${predict_type}'"
+    echo "in main_nmt_bilingual_full_CharLOTTE_PREDICT.sh, predict_type='${predict_type}'"
     PRED_TYPE=$predict_type
 fi
 echo "    predict_type=${predict_type}"

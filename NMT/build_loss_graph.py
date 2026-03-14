@@ -4,7 +4,6 @@ import os
 import matplotlib.pyplot as plt 
 from tqdm import tqdm
 
-# Example dir: /home/hatch5o6/nobackup/archive/ThesisSRE/TRIALS/trials_ccmatrix_bpe/ccmatrix_bpe-trial_0
 def write_loss_graph(
     trial_dir
 ):
@@ -27,25 +26,17 @@ def write_loss_graph(
         with open(metrics_csv, newline='') as inf:
             r = 0
             for row in csv.reader(inf):
-                # print(row)
-                # print(len(row))
                 if r == 0:
-                    # assert row == ["epoch","lr-AdamW","step","train_loss_epoch","train_loss_step","val_loss_epoch","val_loss_step"]
                     assert row == [
                         "epoch","grad_norm","lr-AdamW","step",
                         "train_loss_epoch","train_loss_step",
-                        # "train_src_max_seq_len","train_tgt_max_seq_len",
                         "val_loss_epoch","val_loss_step",
-                        # "val_src_max_seq_len","val_tgt_max_seq_len"
                     ]
                 else:
                     row = tuple(row)
-                    # epoch, lr_adam, step, train_loss_epoch, train_loss_step, val_loss_epoch, val_loss_step = tuple(row)
                     (epoch, grad_norm, lr_adam, step,
                      train_loss_epoch, train_loss_step, 
-                    #  train_src_max_seq_len, train_tgt_max_seq_len,
                      val_loss_epoch, val_loss_step, 
-                    #  val_src_max_seq_len, val_tgt_max_seq_len
                      ) = tuple(row)
                     if train_loss_epoch.strip() != "":
                         assert epoch.strip() != ""
@@ -92,7 +83,7 @@ def write_loss_graph(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dir", default="/home/hatch5o6/nobackup/archive/CognateMT/PredictCognates/mfe-en", help="language pair directory holding training results for all models")
+    parser.add_argument("--dir", help="language pair directory holding training results for all models")
     args = parser.parse_args()
 
     print("MAKING GRAPHS FOR", args.dir)

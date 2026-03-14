@@ -2,9 +2,9 @@
 
 set -e
 
-__conda_setup="$('/vapps/rhel9/x86_64/miniconda3/latest/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-eval "$__conda_setup"
-unset __conda_setup
+source .env
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
 
 echo "Starting train_SC.sh-----------"
 date
@@ -439,8 +439,8 @@ echo "    BEAM=$BEAM"
 if [ $SC_MODEL_TYPE = "RNN" ]
 then
     # train RNN
-    echo "    bash ${COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_brendan.sh ${PARAMETERS_F} ${SEED} ${NBEST} ${BEAM}"
-    bash "${COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_brendan.sh" "${PARAMETERS_F}" "${SEED}" "${NBEST}" "${BEAM}"
+    echo "    bash ${COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_CharLOTTE.sh ${PARAMETERS_F} ${SEED} ${NBEST} ${BEAM}"
+    bash "${COPPERMT_DIR}/pipeline/main_nmt_bilingual_full_CharLOTTE.sh" "${PARAMETERS_F}" "${SEED}" "${NBEST}" "${BEAM}"
 
     # select best model
     WORKSPACE_SEED_DIR=$COPPERMT_DATA_DIR/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/workspace/reference_models/bilingual/rnn_${SRC}-${TGT}/${SEED}
@@ -451,8 +451,8 @@ elif [ $SC_MODEL_TYPE = "SMT" ]
 then
     # train SMT
     cd ${COPPERMT_DIR}/pipeline
-    echo "    bash ${COPPERMT_DIR}/pipeline/main_smt_full_brendan.sh ${PARAMETERS_F} ${SEED}"
-    bash "${COPPERMT_DIR}/pipeline/main_smt_full_brendan.sh" "${PARAMETERS_F}" "${SEED}"
+    echo "    bash ${COPPERMT_DIR}/pipeline/main_smt_full_CharLOTTE.sh ${PARAMETERS_F} ${SEED}"
+    bash "${COPPERMT_DIR}/pipeline/main_smt_full_CharLOTTE.sh" "${PARAMETERS_F}" "${SEED}"
 fi
 
 
@@ -495,8 +495,8 @@ SRC_VOCAB=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS
 echo "Testing model"
 if [ $SC_MODEL_TYPE = "RNN" ]
 then
-    echo "    main_nmt_bilingual_full_brendan_PREDICT.sh ${PARAMETERS_F} ${SELECTED_RNN_CHECKPOINT} ${SEED} test ${NBEST} ${BEAM}"
-    bash "main_nmt_bilingual_full_brendan_PREDICT.sh" "${PARAMETERS_F}" "${SELECTED_RNN_CHECKPOINT}" "${SEED}" "test" "${NBEST}" "${BEAM}"
+    echo "    main_nmt_bilingual_full_CharLOTTE_PREDICT.sh ${PARAMETERS_F} ${SELECTED_RNN_CHECKPOINT} ${SEED} test ${NBEST} ${BEAM}"
+    bash "main_nmt_bilingual_full_CharLOTTE_PREDICT.sh" "${PARAMETERS_F}" "${SELECTED_RNN_CHECKPOINT}" "${SEED}" "test" "${NBEST}" "${BEAM}"
     HYP_OUT_TXT=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/workspace/reference_models/bilingual/rnn_${SRC}-${TGT}/${SEED}/results/test_on_val_selected_checkpoint_${SRC}_${TGT}.${TGT}/generate-valid.txt
     TEST_OUT_F=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/workspace/reference_models/bilingual/rnn_${SRC}-${TGT}/${SEED}/results/test_on_val_selected_checkpoint_${SRC}_${TGT}.${TGT}/generate-valid.hyp.txt
     
@@ -516,8 +516,8 @@ then
 elif [ $SC_MODEL_TYPE = "SMT" ]
 then
     HYP_OUT=${SPLIT_DATA}/fine_tune_${SRC}_${TGT}.${TGT}
-    echo "    main_smt_full_brendan_PREDICT.sh ${PARAMETERS_F} ${SRC_TEXT} ${HYP_OUT} ${SEED}"
-    bash "main_smt_full_brendan_PREDICT.sh" "${PARAMETERS_F}" "${SRC_TEXT}" "${HYP_OUT}" "${SEED}"
+    echo "    main_smt_full_CharLOTTE_PREDICT.sh ${PARAMETERS_F} ${SRC_TEXT} ${HYP_OUT} ${SEED}"
+    bash "main_smt_full_CharLOTTE_PREDICT.sh" "${PARAMETERS_F}" "${SRC_TEXT}" "${HYP_OUT}" "${SEED}"
     TEST_OUT_F=$HYP_OUT.hyp.txt    
     SCORES_OUT_F=$HYP_OUT.hyp.scores.txt
     

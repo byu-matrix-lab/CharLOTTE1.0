@@ -1,7 +1,6 @@
 import argparse
 import random
 import os
-import shutil
 
 def split_data(
     data1_f,
@@ -49,7 +48,6 @@ def split_data(
     assert val_rat + train_rat == 1
     val_amount = round(val_rat * len(data))
     print(f"UNBOUNDED VAL AMMOUNT: {val_amount}")
-    # bound val_amount between 200 and 1000
     val_amount = max(min_val_size, val_amount)
     val_amount = min(max_val_size, val_amount)
     print(f"VAL AMMOUNT BOUNDED ({min_val_size}-{max_val_size}): {val_amount}")

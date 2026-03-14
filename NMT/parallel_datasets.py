@@ -1,9 +1,18 @@
 from torch.utils.data import Dataset
 from tqdm import tqdm
 import csv
-# import random
 import copy
+import os
 from pytorch_lightning.utilities import rank_zero_info
+
+def set_env():
+    assert os.path.exists(".env"), f"NO .env FILE FOUND"
+    with open(".env") as env_file:
+        for line in env_file:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, val = line.partition("=")
+                os.environ.setdefault(key.strip(), val.strip())
 
 class ParallelDataset(Dataset):
     def __init__(
@@ -61,9 +70,6 @@ class MultilingualDataset(Dataset):
         CAN_RETURN_ZERO=False,
         REVERSE_SRC_TGT=False
     ):
-        # print("MULTILINGUAL DATASET: random seed:", seed)
-        # random.seed(seed)
-
         self.append_src_lang_tok = append_src_lang_tok
         self.append_tgt_to_src = append_tgt_to_src
         self.append_tgt_lang_tok = append_tgt_lang_tok
@@ -88,8 +94,7 @@ class MultilingualDataset(Dataset):
         assert len(src_lines) == len(tgt_lines)
         pairs = list(zip(src_lines, tgt_lines))
         rank_zero_info(f"MultilingualDataset TOTAL PAIRS: {len(pairs)}")
-        # if self.shuffle:
-        #     random.shuffle(pairs)
+
         self.pairs = pairs
     
     def make_data_by_pairs_unique(self, data_by_pairs):
@@ -115,11 +120,7 @@ class MultilingualDataset(Dataset):
         return data_by_pairs
 
     def read_csv(self, f, REVERSE_SRC_TGT=False, sc_model_id=None, upsample=False, make_unique=False):
-        # if sc_model_id != None: # Not sure why I wrote these lines.
-        #     assert f.endswith("/train.no_overlap_v1.csv") or f.endswith("/val.no_overlap_v1.csv")
-        # else:
-        #     assert f.endswith("/test.csv") or f.endswith("/inference.csv")
-
+        set_env()
         with open(f, newline='') as inf:
             rows = [row for row in csv.reader(inf)]
         header = rows[0]
@@ -130,6 +131,9 @@ class MultilingualDataset(Dataset):
         SRC_PATHS = []
         TGT_PATHS = []
         for src_lang, tgt_lang, src_path, tgt_path in rows:
+            src_path = os.path.expandvars(src_path)
+            tgt_path = os.path.expandvars(tgt_path)
+
             assert "SC_{SC_MODEL_ID}" not in tgt_path
             if sc_model_id == None:
                 assert "SC_{SC_MODEL_ID}" not in src_path
@@ -146,7 +150,6 @@ class MultilingualDataset(Dataset):
             if REVERSE_SRC_TGT:
                 src_lang, tgt_lang = tgt_lang, src_lang
                 src_path, tgt_path = tgt_path, src_path
-
 
             SRC_PATHS.append(src_path)
             TGT_PATHS.append(tgt_path)
@@ -218,8 +221,6 @@ class MultilingualDataset(Dataset):
 
     def upsample_data(self, data, final_size):
         assert final_size >= len(data)
-        # if self.shuffle:
-        #     random.shuffle(data)
         while len(data) < final_size:
             data += data
         if len(data) > final_size:

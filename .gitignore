@@ -24,3 +24,6 @@ NMT/align_tokens.NWS.all.out
 NMT/align_tokens.all.out
 **lightning_logs/
 .claude/
+.env
+.CLAUDE.md
+.CLEANUP_PLAN.md

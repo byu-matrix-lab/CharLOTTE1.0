@@ -34,7 +34,6 @@ mkdir -p ${WORK_DIR}/bleu
 mkdir -p ${WORK_DIR}/results
 
 # To get all checkpoints
-#for f in $(ls "$WORKSPACE/checkpoints/$EXP_NAME"); do
 for lang_pair in ${LANGS}; do
     # score
     IFS="-" read l_in l_out <<< "${lang_pair}";
