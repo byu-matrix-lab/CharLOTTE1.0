@@ -29,4 +29,4 @@ NMT/align_tokens.all.out
 .CLEANUP_PLAN.md
 data/data-cleaning-pipeline/
 data/confirm_data_is_same*
-dat/get_diff*
+data/get_diff*
