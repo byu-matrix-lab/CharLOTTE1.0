@@ -30,4 +30,8 @@ cd ../../CopperMT
 git clone https://github.com/clefourrier/CopperMT.git
 cd CopperMTfiles
 python copy_files.py
+
+
+cd ../../data
+git clone https://github.com/byu-matrix-lab/data-cleaning-pipeline.git --branch v0.1.0
 cd ../..
