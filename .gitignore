@@ -30,3 +30,4 @@ NMT/align_tokens.all.out
 data/data-cleaning-pipeline/
 data/confirm_data_is_same*
 data/get_diff*
+data/fix_cleaning_pipeline_diagnosis.md
