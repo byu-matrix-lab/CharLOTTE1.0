@@ -94,7 +94,8 @@ sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 ```
 
 ### Train NMT Tokenizers
-**Tokenizer for transfer learning and simple baseline NMT models**
+**Tokenizers for transfer learning and simple baseline NMT models**
+
 For the *fr/mfe→en* scenario, replace *"es-an_en"* with *"fr-mfe_en"*
 
 For the *fr/oc→en* scenario, replace *"es-an_en"* with *"fr-oc_en"*
@@ -113,7 +114,7 @@ On HPC:
 sbatch Pipeline/train_all_tokenizers.sh
 ```
 
-**Tokenizers for CharLOTTE NMT model**
+**Tokenizer for CharLOTTE NMT model**
 
 For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
 
