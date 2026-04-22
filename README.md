@@ -64,6 +64,7 @@ The documentation will demonstrate how to reproduce our results for the *es/an�
 
 ### Train OC Model
 For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
+
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
 
 Not on HPC:
@@ -79,7 +80,9 @@ sbatch Pipeline/sbatch/hyperparam_search/es-an.213.cfg.sh
 
 ### Reshape Parent Language
 For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
+
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
+
 Not on HPC:
 ```
 bash Pipeline/pred_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
@@ -93,6 +96,7 @@ sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 ### Train NMT Tokenizers
 **Tokenizer for transfer learning and simple baseline NMT models**
 For the *fr/mfe→en* scenario, replace *"es-an_en"* with *"fr-mfe_en"*
+
 For the *fr/oc→en* scenario, replace *"es-an_en"* with *"fr-oc_en"*
 ```
 bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es-an_en.cfg
@@ -111,6 +115,7 @@ sbatch Pipeline/train_all_tokenizers.sh
 
 **Tokenizer for CharLOTTE NMT model**
 For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
+
 For the *fr/oc→en* scenario, replace *"es2an-an_en"* with *"fr2oc-oc_en"*
 ```
 bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es2an-an_en.cfg
