@@ -49,7 +49,7 @@ If you actually want to run the OC hyperparameter search yourself using an HPC c
 ```
 bash Pipeline/sh/conduct_hyperparam_search_space.sh run
 ```
-> **_NOTE:_** To edit the SBATCH parameters used, edit the SBATCH_TEMPLATE string in *Pipeline/make_hyperparam_search_space.py*.
+> **_NOTE:_** To edit the SBATCH parameters used, edit the **SBATCH_TEMPLATE** string in *Pipeline/make_hyperparam_search_space.py*.
 
 Then compile the results for the hyperparameter search:
 ```
@@ -92,6 +92,8 @@ On HPC:
 ```
 sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 ```
+```
+> **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 ### Train NMT Tokenizers
 **Tokenizers for transfer learning and simple baseline NMT models:**
@@ -113,6 +115,8 @@ On HPC:
 ```
 sbatch Pipeline/train_all_tokenizers.sh
 ```
+```
+> **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 **Tokenizer for CharLOTTE NMT model:**
 
@@ -130,10 +134,12 @@ You can optionally include your qos with the --qos flag if you intend to train o
 ```
 python NMT/make_sbatch.py [--qos {your qos}]
 ```
+**_NOTE:_** You may edit the **sbatch_template** string in *NMT/make_sbatch.py*  to accomodate for your HPC resources as needed.
 
 The following scripts were written to run on an HPC cluster. The scripts themselves make the sbatch commands, so you will simply invoke them with "bash". If not running on an HPC cluster, simply edit the scripts, replacing "sbatch" with "bash".
 
 For the *fr/mfe→en* scenario, replace *"an-en"* in each of the script paths below with *"mfe-en"*
+
 For the *fr/oc→en* scenario, replace *"an-en"* in each of the script paths below with *"oc-en"*
 
 ##### Simple baseline model
