@@ -43,13 +43,18 @@ To create the OC training scripts, run:
 ```
 bash Pipeline/sh/conduct_hyperparam_search_space.sh
 ```
-This will ONLY create the training scripts for each OC model in the hyperparameter search space. See below to run the selected models reported in our paper.
+This will ONLY create the training scripts for each OC model in the hyperparameter search space. Continue on to train and run the selected models reported in our paper.
 
-If you actually want to run the hyperparameter search yourself using an HPC cluster, run this instead:
+If you actually want to run the OC hyperparameter search yourself using an HPC cluster, run this instead:
 ```
 bash Pipeline/sh/conduct_hyperparam_search_space.sh run
 ```
 > **_NOTE:_** To edit the SBATCH parameters used, edit the SBATCH_TEMPLATE string in Pipeline/make_hyperparam_search_space.py
+Then compile the results for the hyperparameter search:
+```
+bash Pipeline/sh/compile_hyperparam_search_results.sh
+```
+The results will appear in *Pipeline/hyperparam_search_results*
 
 
 
