@@ -3,6 +3,8 @@ This is the codebase for **CharLOTTE:** (**Char**acter-**L**evel **O**rthographi
 
 See our [paper], referenced below, for an explanation of the method.
 
+**_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
+
 # Installation
 This codebase uses and expects *Conda* environments. The *setup.sh* assumes Conda is already installed and will create two environments `char1.0` and `cop_mt`. It will also install the [CopperMT](https://github.com/clefourrier/CopperMT), [Fast Align](https://github.com/clab/fast_align), and [BYU Matrix Data Cleaning Pipeline](https://github.com/byu-matrix-lab/data-cleaning-pipeline) codebases.
 ```
@@ -20,6 +22,7 @@ On HPC:
 ```
 bash data/prepare_data_sbatch.sh
 ```
+**_NOTE:_** edit SBATCH parameters in *data/clean_data_sbatch.sh* (called from *prepare_data_sbatch*) as needed.
 
 **Once data is downloaded and cleaned, make the datasets**
 
@@ -31,10 +34,10 @@ On HPC:
 ```
 sbatch data/make_training_data_sbatch.sh
 ```
+**_NOTE:_** edit SBATCH parameters in *data/make_training_data_sbatch.sh* as needed.
 
 
 # Experiments
-**_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
 
 To create the OC training scripts, run:
 ```
@@ -56,11 +59,13 @@ The documentation will demonstrate how to reproduce our results for the *es/an�
 ### Train OC Model
 For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
+
+Not on HPC:
 ```
 bash Pipeline/train_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
 ```
 
-If running on an HPC cluster, run this instead:
+On HPC:
 ```
 sbatch Pipeline/sbatch/hyperparam_search/es-an.213.cfg.sh
 ```
@@ -69,11 +74,12 @@ sbatch Pipeline/sbatch/hyperparam_search/es-an.213.cfg.sh
 ### Reshape Parent Language
 For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
+Not on HPC:
 ```
 bash Pipeline/pred_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
 ```
 
-On HPC Cluster:
+On HPC:
 ```
 sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 ```
@@ -84,6 +90,17 @@ For the *fr/mfe→en* scenario, replace *"es-an_en"* with *"fr-mfe_en"*
 For the *fr/oc→en* scenario, replace *"es-an_en"* with *"fr-oc_en"*
 ```
 bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es-an_en.cfg
+```
+
+You can also optionally train all tokenizers at once by running:
+Not on HPC:
+```
+bash Pipeline/train_all_tokenizers.sh
+```
+
+On HPC:
+```
+sbatch Pipeline/train_all_tokenizers.sh
 ```
 
 **Tokenizer for CharLOTTE NMT model**
