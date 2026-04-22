@@ -3,7 +3,7 @@ This is the codebase for **CharLOTTE:** (**Char**acter-**L**evel **O**rthographi
 
 See our [paper], referenced below, for an explanation of the method.
 
-**_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
+> **_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
 
 # Installation
 This codebase uses and expects *Conda* environments. The *setup.sh* assumes Conda is already installed and will create two environments `char1.0` and `cop_mt`. It will also install the [CopperMT](https://github.com/clefourrier/CopperMT), [Fast Align](https://github.com/clab/fast_align), and [BYU Matrix Data Cleaning Pipeline](https://github.com/byu-matrix-lab/data-cleaning-pipeline) codebases.
@@ -22,7 +22,7 @@ On HPC:
 ```
 bash data/prepare_data_sbatch.sh
 ```
-**_NOTE:_** edit SBATCH parameters in *data/clean_data_sbatch.sh* (called from *prepare_data_sbatch*) as needed.
+> **_NOTE:_** edit SBATCH parameters in *data/clean_data_sbatch.sh* (called from *prepare_data_sbatch*) as needed.
 
 **Once data is downloaded and cleaned, make the datasets**
 
@@ -34,7 +34,7 @@ On HPC:
 ```
 sbatch data/make_training_data_sbatch.sh
 ```
-**_NOTE:_** edit SBATCH parameters in *data/make_training_data_sbatch.sh* as needed.
+> **_NOTE:_** edit SBATCH parameters in *data/make_training_data_sbatch.sh* as needed.
 
 
 # Experiments
@@ -92,8 +92,9 @@ On HPC:
 ```
 sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 ```
-```
+
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
+
 
 ### Train NMT Tokenizers
 **Tokenizers for transfer learning and simple baseline NMT models:**
@@ -115,7 +116,6 @@ On HPC:
 ```
 sbatch Pipeline/train_all_tokenizers.sh
 ```
-```
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 **Tokenizer for CharLOTTE NMT model:**
@@ -134,7 +134,7 @@ You can optionally include your qos with the --qos flag if you intend to train o
 ```
 python NMT/make_sbatch.py [--qos {your qos}]
 ```
-**_NOTE:_** You may edit the **sbatch_template** string in *NMT/make_sbatch.py*  to accomodate for your HPC resources as needed.
+> **_NOTE:_** You may edit the **sbatch_template** string in *NMT/make_sbatch.py*  to accomodate for your HPC resources as needed.
 
 The following scripts were written to run on an HPC cluster. The scripts themselves make the sbatch commands, so you will simply invoke them with "bash". If not running on an HPC cluster, simply edit the scripts, replacing "sbatch" with "bash".
 
