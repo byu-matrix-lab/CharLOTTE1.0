@@ -59,7 +59,7 @@ The results will appear in *Pipeline/hyperparam_search_results*
 
 
 
-## CharLOTTE and Baseline Pipelines:
+## CharLOTTE and Baseline Pipelines
 The documentation will demonstrate how to reproduce our results for the *es/an→en* scenario, with notes on how to run the *fr/mfe→en* and *fr/oc→en* scenarios.
 
 ### Train OC Model
@@ -106,7 +106,17 @@ For the *fr/oc→en* scenario, replace *"es-an_en"* with *"fr-oc_en"*
 bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es-an_en.cfg
 ```
 
-You can also optionally train all tokenizers at once by running:
+**Tokenizer for CharLOTTE NMT model:**
+
+For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
+
+For the *fr/oc→en* scenario, replace *"es2an-an_en"* with *"fr2oc-oc_en"*
+```
+bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es2an-an_en.cfg
+```
+
+**You can also optionally train all tokenizers at once by running *Pipeline/train_all_tokenizers.sh*:**
+
 Not on HPC:
 ```
 bash Pipeline/train_all_tokenizers.sh
@@ -118,14 +128,6 @@ sbatch Pipeline/train_all_tokenizers.sh
 ```
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
-**Tokenizer for CharLOTTE NMT model:**
-
-For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
-
-For the *fr/oc→en* scenario, replace *"es2an-an_en"* with *"fr2oc-oc_en"*
-```
-bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es2an-an_en.cfg
-```
 
 ### Train NMT Model Training and Testing
 **Make training scripts:**
