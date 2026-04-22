@@ -11,6 +11,7 @@ bash setup.sh
 
 # Downloading and Preparing Data
 **Download and clean data**
+
 Not on HPC:
 ```
 bash data/prepare_data.sh
@@ -21,6 +22,7 @@ bash data/prepare_data_sbatch.sh
 ```
 
 **Once data is downloaded and cleaned, make the datasets**
+
 Not on HPC:
 ```
 bash data/make_training_data.sh
