@@ -9,6 +9,28 @@ This codebase uses and expects *Conda* environments. The *setup.sh* assumes Cond
 bash setup.sh
 ```
 
+# Downloading and Preparing Data
+**Download and clean data**
+Not on HPC:
+```
+bash data/prepare_data.sh
+```
+On HPC:
+```
+bash data/prepare_data_sbatch.sh
+```
+
+**Once data is downloaded and cleaned, make the datasets**
+Not on HPC:
+```
+bash data/make_training_data.sh
+```
+On HPC:
+```
+sbatch data/make_training_data_sbatch.sh
+```
+
+
 # Experiments
 **_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
 
