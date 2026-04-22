@@ -130,7 +130,7 @@ sbatch Pipeline/train_all_tokenizers.sh
 
 
 ### NMT Training and Testing
-**Make training scripts:**
+First, make the training scripts with *NMT/make_sbatch.py*:
 
 You can optionally include your qos with the --qos flag if you intend to train on an HPC cluster.
 ```
@@ -138,7 +138,7 @@ python NMT/make_sbatch.py [--qos {your qos}]
 ```
 > **_NOTE:_** You may edit the **sbatch_template** string in *NMT/make_sbatch.py*  to accomodate for your HPC resources as needed.
 
-The following scripts were written to run on an HPC cluster. The scripts themselves make the sbatch commands, so you will simply invoke them with "bash". If not running on an HPC cluster, simply edit the scripts, replacing "sbatch" with "bash".
+The following scripts should now be created. They were written to run on an HPC cluster. The scripts themselves make the sbatch commands, so you will simply invoke them with "bash". If not running on an HPC cluster, simply edit the scripts, replacing "sbatch" with "bash".
 
 For the *fr/mfe→en* scenario, replace *"an-en"* in each of the script paths below with *"mfe-en"*
 
