@@ -129,7 +129,7 @@ sbatch Pipeline/train_all_tokenizers.sh
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 
-### Train NMT Model Training and Testing
+### NMT Training and Testing
 **Make training scripts:**
 
 You can optionally include your qos with the --qos flag if you intend to train on an HPC cluster.
