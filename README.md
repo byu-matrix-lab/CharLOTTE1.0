@@ -161,7 +161,7 @@ Pre-train both the CharLOTTE and baseline parent models:
 bash NMT/sbatch/TRAIN/an-en/all_PRETRAIN.sh
 ```
 
-When done, run testing on the pre-trained models (you MUST do this before fine-tuning):
+When done, run testing on the pre-trained models. You MUST do this before fine-tuning since it will evaluate the pre-trained models on their respective validation sets so that the training script knows which pre-trained checkpoint to select for fine-tuning:
 ```
 bash NMT/sbatch/TEST/an-en/all_PRETRAIN.sh
 ```
@@ -174,6 +174,41 @@ bash NMT/sbatch/TRAIN/an-en/all_FINETUNE.sh
 When done, test the child models:
 ```
 bash NMT/sbatch/TEST/an-en/all_FINETUNE.sh
+```
+
+#### Reverse translation directions
+To train the NMT models that translate into the low-resource directions, i.e *en→es/an*, *en→fr/mfe*, *en→fr/oc*, you will do the same but with different paths:
+
+##### Simple baseline model
+Train:
+```
+bash NMT/sbatch/TRAIN.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_NMT.sh
+```
+
+Then when done, test:
+```
+bash NMT/sbatch/TEST.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_NMT.sh
+```
+
+##### Transfer learning baseline and CharLOTTE models
+Pre-train both the CharLOTTE and baseline parent models:
+```
+bash NMT/sbatch/TRAIN.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_PRETRAIN.sh
+```
+
+When done, run testing on the pre-trained models. You MUST do this before fine-tuning since it will evaluate the pre-trained models on their respective validation sets so that the training script knows which pre-trained checkpoint to select for fine-tuning:
+```
+bash NMT/sbatch/TEST.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_PRETRAIN.sh
+```
+
+When done, fine-tune both the CharLOTTE and baseline child models:
+```
+bash NMT/sbatch/TRAIN.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_FINETUNE.sh
+```
+
+When done, test the child models:
+```
+bash NMT/sbatch/TEST.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_FINETUNE.sh
 ```
 
 # TODO compile the scores
