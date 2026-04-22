@@ -94,7 +94,7 @@ sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 ```
 
 ### Train NMT Tokenizers
-**Tokenizers for transfer learning and simple baseline NMT models**
+**Tokenizers for transfer learning and simple baseline NMT models:**
 
 For the *fr/mfe→en* scenario, replace *"es-an_en"* with *"fr-mfe_en"*
 
@@ -114,7 +114,7 @@ On HPC:
 sbatch Pipeline/train_all_tokenizers.sh
 ```
 
-**Tokenizer for CharLOTTE NMT model**
+**Tokenizer for CharLOTTE NMT model:**
 
 For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
 
@@ -124,7 +124,8 @@ bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es2an-an_en.cfg
 ```
 
 ### Train NMT Model Training and Testing
-#### Make training scripts.
+**Make training scripts:**
+
 You can optionally include your qos with the --qos flag if you intend to train on an HPC cluster.
 ```
 python NMT/make_sbatch.py [--qos {your qos}]
@@ -134,6 +135,7 @@ The following scripts were written to run on an HPC cluster. The scripts themsel
 
 For the *fr/mfe→en* scenario, replace *"an-en"* in each of the script paths below with *"mfe-en"*
 For the *fr/oc→en* scenario, replace *"an-en"* in each of the script paths below with *"oc-en"*
+
 ##### Simple baseline model
 Train:
 ```
