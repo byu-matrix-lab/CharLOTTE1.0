@@ -95,10 +95,10 @@ def main(configs_dir, mode, qos, out_dir, REVERSE_SRC_TGT):
             if qos == "cs":
                 n_gpus_str = "a100:" + n_gpus_str
 
-            if qos in ["matrix", "dw87"]:
-                walltime = "72:00:00"
-            else:
+            if qos in ["cs"]:
                 walltime = "24:00:00"
+            else:
+                walltime = "72:00:00"
 
             sbatch_content = sbatch_template.replace("{name}", name + RTAG) \
                 .replace("{qos}", qos) \
@@ -139,7 +139,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--configs_dir", default="NMT/configs/CONFIGS")
     parser.add_argument("--out", default="NMT/sbatch")
-    parser.add_argument("--qos", default="matrix", choices=["matrix", "dw87", "cs"])
+    parser.add_argument("--qos", default="matrix")
     parser.add_argument("--mode", choices=["TRAIN", "TEST", "INFERENCE", "ALL"], default="ALL")
     return parser.parse_args()
 

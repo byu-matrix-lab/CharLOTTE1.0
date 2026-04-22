@@ -141,7 +141,7 @@ def get_args():
     parser.add_argument("--dir", default="Pipeline/rnn_hyperparams")
     parser.add_argument("--cfgs", required=True, help="comma-delimited list")
     parser.add_argument("--new_cfg_dir", default="Pipeline/cfg/SC-HYPERPARAM_SEARCH")
-    parser.add_argument("--sbatch_dir", default="Pipeline/sbatch/hyper_param_search")
+    parser.add_argument("--sbatch_dir", default="Pipeline/sbatch/hyperparam_search")
     parser.add_argument("--tag", default="")
     return parser.parse_args()
 

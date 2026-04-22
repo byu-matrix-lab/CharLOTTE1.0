@@ -32,3 +32,7 @@ data/confirm_data_is_same*
 data/get_diff*
 data/fix_cleaning_pipeline_diagnosis.md
 NMT/sbatch/
+CLAUDE.md
+CLEANUP_PLAN.md
+EXPAND_DATA_HOME_PLAN.md
+**hyperparam_search/
