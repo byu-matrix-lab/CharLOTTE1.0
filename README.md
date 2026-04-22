@@ -113,7 +113,8 @@ On HPC:
 sbatch Pipeline/train_all_tokenizers.sh
 ```
 
-**Tokenizer for CharLOTTE NMT model**
+**Tokenizers for CharLOTTE NMT model**
+
 For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
 
 For the *fr/oc→en* scenario, replace *"es2an-an_en"* with *"fr2oc-oc_en"*
