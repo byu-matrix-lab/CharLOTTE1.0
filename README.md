@@ -177,7 +177,7 @@ bash NMT/sbatch/TEST/an-en/all_FINETUNE.sh
 ```
 
 #### Reverse translation directions
-To train the NMT models that translate into the low-resource directions, i.e *en→es/an*, *en→fr/mfe*, *en→fr/oc*, you will do the same but with different paths:
+To train the NMT models that translate into the low-resource directions, i.e. *en→es/an*, *en→fr/mfe*, *en→fr/oc*, you will do the same but with different paths:
 
 ##### Simple baseline model
 Train:
