@@ -43,7 +43,7 @@ To create the OC training scripts, run:
 ```
 bash Pipeline/sh/conduct_hyperparam_search_space.sh
 ```
-This will ONLY create the training scripts for each OC model in the hyperparameter search space. Continue on to train and run the selected models reported in our paper.
+This will ONLY create the training scripts for each OC model in the hyperparameter search space. Continue on to section *CharLOTTE and Baselin Pipelines** to train and run the selected models reported in our paper.
 
 If you actually want to run the OC hyperparameter search yourself using an HPC cluster, run this instead:
 ```
