@@ -10,6 +10,8 @@ bash setup.sh
 ```
 
 # Experiments
+**_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
+
 To create the OC training scripts, run:
 ```
 bash Pipeline/sh/conduct_hyperparam_search_space.sh
@@ -22,8 +24,14 @@ bash Pipeline/sh/conduct_hyperparam_search_space.sh run
 ```
 > **_NOTE:_** To edit the SBATCH parameters used, edit the SBATCH_TEMPLATE string in Pipeline/make_hyperparam_search_space.py
 
-## es/an --> en
+
+
+## CharLOTTE and Baseline Pipelines:
+The documentation will demonstrate how to reproduce our results for the *es/an→en* scenario, with notes on how to run the *fr/mfe→en* and *fr/oc→en* scenarios.
+
 ### Train OC Model
+For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
+For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
 ```
 bash Pipeline/train_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
 ```
@@ -35,33 +43,73 @@ sbatch Pipeline/sbatch/hyperparam_search/es-an.213.cfg.sh
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 ### Reshape Parent Language
+For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
+For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
+```
+bash Pipeline/pred_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
+```
 
-### Train NMT Tokenizer
+On HPC Cluster:
+```
+sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
+```
 
-### Train NMT Model
+### Train NMT Tokenizers
+**Tokenizer for transfer learning and simple baseline NMT models**
+For the *fr/mfe→en* scenario, replace *"es-an_en"* with *"fr-mfe_en"*
+For the *fr/oc→en* scenario, replace *"es-an_en"* with *"fr-oc_en"*
+```
+bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es-an_en.cfg
+```
 
-### NMT Inference
+**Tokenizer for CharLOTTE NMT model**
+For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
+For the *fr/oc→en* scenario, replace *"es2an-an_en"* with *"fr2oc-oc_en"*
+```
+bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es2an-an_en.cfg
+```
 
+### Train NMT Model Training and Testing
+#### Make training scripts.
+You can optionally include your qos with the --qos flag if you intend to train on an HPC cluster.
+```
+python NMT/make_sbatch.py [--qos {your qos}]
+```
 
-## fr/mfe --> en
-### Train OC Model
+The following scripts were written to run on an HPC cluster. The scripts themselves make the sbatch commands, so you will simply invoke them with "bash". If not running on an HPC cluster, simply edit the scripts, replacing "sbatch" with "bash".
 
-### Reshape Parent Language
+For the *fr/mfe→en* scenario, replace *"an-en"* in each of the script paths below with *"mfe-en"*
+For the *fr/oc→en* scenario, replace *"an-en"* in each of the script paths below with *"oc-en"*
+##### Simple baseline model
+Train:
+```
+bash NMT/sbatch/TRAIN/an-en/all_NMT.sh
+```
 
-### Train NMT Tokenizer
+Then when done, test:
+```
+bash NMT/sbatch/TEST/an-en/all_NMT.sh
+```
 
-### Train NMT Model
+##### Transfer learning baseline and CharLOTTE models
+Pre-train both the CharLOTTE and baseline parent models:
+```
+bash NMT/sbatch/TRAIN/an-en/all_PRETRAIN.sh
+```
 
-### NMT Inference
+When done, run testing on the pre-trained models (you MUST do this before fine-tuning):
+```
+bash NMT/sbatch/TEST/an-en/all_PRETRAIN.sh
+```
 
+When done, fine-tune both the CharLOTTE and baseline child models:
+```
+bash NMT/sbatch/TRAIN/an-en/all_FINETUNE.sh
+```
 
-## fr/oc --> en
-### Train OC Model
+When done, test the child models:
+```
+bash NMT/sbatch/TEST/an-en/all_FINETUNE.sh
+```
 
-### Reshape Parent Language
-
-### Train NMT Tokenizer
-
-### Train NMT Model
-
-### NMT Inference
+# TODO compile the scores

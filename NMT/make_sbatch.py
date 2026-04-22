@@ -16,7 +16,7 @@ sbatch_template = """
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user thebrendanhatch@gmail.com
+#SBATCH --mail-user %u@byu.edu
 #SBATCH --output ${DATA_HOME}/NMT/{LANG_OUT}/%j_%x.out
 #SBATCH --job-name={name}
 #SBATCH --qos={qos}
