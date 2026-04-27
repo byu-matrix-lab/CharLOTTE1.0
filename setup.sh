@@ -17,6 +17,7 @@ pip install -r requirements.copper.txt
 
 conda deactivate
 conda activate char1.0
+conda install -n char1.0 -c conda-forge cffi pycparser six cld2-cffi icu -y
 pip install -r requirements.txt
 
 git clone https://github.com/clab/fast_align.git
@@ -34,4 +35,4 @@ python copy_files.py
 
 cd ../../data
 git clone https://github.com/byu-matrix-lab/data-cleaning-pipeline.git --branch v0.1.0
-cd ../..
+cd ..
