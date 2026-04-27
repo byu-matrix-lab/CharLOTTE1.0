@@ -4,8 +4,8 @@ set -e
 
 source .env
 
-mkdir ${DATA_HOME}
-mkdir ${DATA_HOME}/CognateMT
+mkdir -p ${DATA_HOME}
+mkdir -p ${DATA_HOME}/CognateMT
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 
