@@ -18,7 +18,7 @@ camel-kenlm==2025.9.16
 camel_tools==1.5.7
 catalogue==2.0.10
 certifi==2025.8.3
-cffi @ file:///home/conda/feedstock_root/build_artifacts/cffi_1636046050867/work
+cffi==1.15.0
 charset-normalizer==3.4.2
 cld2-cffi==0.1.4
 click==8.2.1
@@ -132,11 +132,11 @@ psutil==7.0.0
 ptyprocess==0.7.0
 pure_eval==0.2.3
 pycldf==1.43.0
-pycparser @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_pycparser_1733195786/work
+pycparser==2.22
 pydantic==2.11.7
 pydantic_core==2.33.2
 Pygments==2.19.2
-PyICU @ file:///home/conda/feedstock_root/build_artifacts/pyicu_1650969690499/work
+PyICU==2.16
 pylatexenc==2.10
 pyparsing==3.2.3
 pyrsistent==0.20.0
@@ -162,7 +162,7 @@ scipy==1.12.0
 sentencepiece==0.2.0
 shellingham==1.5.4
 simplepybtex==0.1.0
-six @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_six_1753199211/work
+six==1.17.0
 smart_open==7.3.0.post1
 smmap==5.0.2
 snowballstemmer==3.0.1
