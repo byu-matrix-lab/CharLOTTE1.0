@@ -1,5 +1,7 @@
 #!/bin/bash
 
+conda activate char1.0
+
 source .env
 [ -z "$DATA_HOME" ] && echo "ERROR: DATA_HOME not set" && exit 1     
 

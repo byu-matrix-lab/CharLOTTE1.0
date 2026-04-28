@@ -90,6 +90,7 @@ def make_cfgs(
     sbatch_dir,
     tag
 ):
+    os.makedirs(sbatch_dir, exist_ok=True)
     keys = sorted([int(i) for i in manifest.keys()])
     ct_variations = 0
     sbatch_files = []
