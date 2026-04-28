@@ -43,7 +43,7 @@ python Pipeline/make_hyperparam_search_space.py \
 
 if [[ "$RUN" == "run" ]]; then
     echo "RNN SBATCH:-"
-    for f in Pipeline/sbatch/hyper_param_search/*
+    for f in Pipeline/sbatch/hyperparam_search/*
     do
         echo "    $f"
         sbatch $f

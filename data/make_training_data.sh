@@ -2,6 +2,8 @@
 # THIS MUST BE RUN ONLY AFTER clean_data_sbatch.sh/clean_data.sh!!!!
 # This will dedupe the training set and ensure no overlap between train / dev / test
 
+conda activate char1.0
+
 source .env
 [ -z "$DATA_HOME" ] && echo "ERROR: DATA_HOME not set" && exit 1     
 

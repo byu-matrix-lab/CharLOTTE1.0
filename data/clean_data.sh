@@ -1,6 +1,8 @@
 # MUST RUN download_data.sh BEFORE THIS!
 set -e
 source .env
+conda activate char1.0
+
 [ -z "$DATA_HOME" ] && echo "ERROR: DATA_HOME not set" && exit 1     
 
 raw_data=${DATA_HOME}/data/raw
