@@ -1,6 +1,10 @@
 import os
 import shutil
 
+for f in os.listdir("root"):
+    f = os.path.join("root", f)
+    shutil.copy(f, "../CopperMT")
+
 for f in os.listdir("pipeline"):
     f = os.path.join("pipeline", f)
     shutil.copy(f, "../CopperMT/pipeline")

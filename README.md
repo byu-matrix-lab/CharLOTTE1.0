@@ -3,6 +3,8 @@ This is the codebase for **CharLOTTE:** (**Char**acter-**L**evel **O**rthographi
 
 See our [paper], referenced below, for an explanation of the method.
 
+This repository was tested on **Red Hat Enterprise Linux 9.6 (Plow)**.
+
 > **_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
 
 # Installation

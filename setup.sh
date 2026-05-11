@@ -27,12 +27,22 @@ cd build
 cmake ..
 make
 
+conda deactivate
+conda activate cop_mt
+conda install boost
 cd ../../CopperMT
 git clone https://github.com/clefourrier/CopperMT.git
 cd CopperMTfiles
 python copy_files.py
+cd ../CopperMT
+git submodule init
+git submodule sync
+git submodule update
+cd submodules/mgiza/mgizapp; cmake . -DBOOST_ROOT=$CONDA_PREFIX; make; make install
+cd ../../mosesdecoder; ./bjam -j4 -q -d2 --with-boost=$CONDA_PREFIX
 
-
-cd ../../data
+conda deactivate
+conda activate char1.0
+cd ../../../../data
 git clone https://github.com/byu-matrix-lab/data-cleaning-pipeline.git --branch v0.1.0
 cd ..

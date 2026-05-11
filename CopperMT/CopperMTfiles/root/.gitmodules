@@ -1,0 +1,9 @@
+[submodule "submodules/mosesdecoder"]
+	path = submodules/mosesdecoder
+	url = https://github.com/moses-smt/mosesdecoder.git
+[submodule "submodules/mgiza"]
+	path = submodules/mgiza
+	url = https://github.com/moses-smt/mgiza.git
+[submodule "submodules/etymdb"]
+	path = submodules/etymdb
+	url = https://github.com/clefourrier/EtymDB.git
