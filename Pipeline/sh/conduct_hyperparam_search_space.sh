@@ -7,7 +7,7 @@ rm Pipeline/rnn_hyperparams/*.txt
 rm Pipeline/rnn_hyperparams/manifest.json
 
 echo "Removing sbatch files"
-rm Pipeline/sbatch/hyper_param_search/*
+rm Pipeline/sbatch/hyperparam_search/*
 
 echo "Removing cfgs"
 rm -r Pipeline/cfg/SC-HYPERPARAM_SEARCH

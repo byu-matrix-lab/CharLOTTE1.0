@@ -70,7 +70,7 @@ python Pipeline/write_scripts.py \
 echo ""
 echo ""
 echo "######## 2.2 Get selected SC model ########"
-conda activate copper
+conda activate cop_mt
 echo "    TYPE=$SC_MODEL_TYPE"
 if [ $SC_MODEL_TYPE = "RNN" ]
 then
@@ -101,7 +101,7 @@ echo ""
 echo ""
 echo "######## 2.4 APPLY SC ########"
 cd $MODULE_HOME_DIR
-conda activate sound
+conda activate char1.0
 SPLIT_DATA=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/inputs/split_data/${SRC}_${TGT}/${SEED}
 COPPER_MT_PREP_OUT_DIR=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/inputs/split_data/${SRC}_${TGT}/inference
 
@@ -134,12 +134,12 @@ for f in ${ALL_CSV_FILES[@]} ; do
         cd ${COPPERMT_DIR}/pipeline
         if [ $SC_MODEL_TYPE = "RNN" ]
         then
-            conda activate copper
+            conda activate cop_mt
             echo "    main_nmt_bilingual_full_CharLOTTE_PREDICT.sh ${PARAMETERS_F} ${SELECTED_RNN_CHECKPOINT} ${SEED} inference ${NBEST} ${BEAM}"
             bash "main_nmt_bilingual_full_CharLOTTE_PREDICT.sh" "${PARAMETERS_F}" "${SELECTED_RNN_CHECKPOINT}" "${SEED}" "inference" "${NBEST}" "${BEAM}"
             COPPERMT_RESULTS=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/workspace/reference_models/bilingual/rnn_${SRC}-${TGT}/${SEED}/results/inference_selected_checkpoint_${SRC}_${TGT}.${TGT}/generate-test.txt
 
-            conda activate sound
+            conda activate char1.0
             cd $MODULE_HOME_DIR
             python NMT/hr_CopperMT.py \
                 --function retrieve \
@@ -151,14 +151,14 @@ for f in ${ALL_CSV_FILES[@]} ; do
                 --log_p_thresh $LOG_P_THRESH
         elif [ $SC_MODEL_TYPE = "SMT" ]
         then
-            conda activate copper
+            conda activate cop_mt
             TEXT=$COPPER_MT_PREP_OUT_DIR/test_${SRC}_${TGT}.${SRC}
             HYP_OUT=$COPPER_MT_PREP_OUT_DIR/test_${SRC}_${TGT}.${TGT}
             echo "    main_smt_full_CharLOTTE_PREDICT.sh ${PARAMETERS_F} ${TEXT} ${HYP_OUT} ${SEED}"
             bash "main_smt_full_CharLOTTE_PREDICT.sh" "${PARAMETERS_F}" "${TEXT}" "${HYP_OUT}" "${SEED}"
             
             HYP_OUT_F=$HYP_OUT.hyp.txt
-            conda activate sound
+            conda activate char1.0
             cd $MODULE_HOME_DIR
             python NMT/hr_CopperMT.py \
                 --function retrieve \

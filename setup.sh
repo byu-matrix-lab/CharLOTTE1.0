@@ -38,7 +38,7 @@ cd ../CopperMT
 git submodule init
 git submodule sync
 git submodule update
-cd submodules/mgiza/mgizapp; cmake . -DBOOST_ROOT=$CONDA_PREFIX; make; make install
+cd submodules/mgiza/mgizapp; cmake . -DBOOST_ROOT=$CONDA_PREFIX; make; make install; cp scripts/merge_alignment.py bin/
 cd ../../mosesdecoder; ./bjam -j4 -q -d2 --with-boost=$CONDA_PREFIX
 
 conda deactivate

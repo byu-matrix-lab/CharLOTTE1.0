@@ -298,7 +298,7 @@ def get_args():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--out", default="Pipeline/hyperparam_search_results")
     parser.add_argument("--tag")
-    parser.add_argument("--sbatch_dir", default="Pipeline/sbatch/hyper_param_search", help="folder of sbatch scripts for hyperparam search. This is for making the redos script.")
+    parser.add_argument("--sbatch_dir", default="Pipeline/sbatch/hyperparam_search", help="folder of sbatch scripts for hyperparam search. This is for making the redos script.")
     parser.add_argument("--smt_sbatch_dir", default="Pipeline/sbatch/smt", help="folder of smt sbatch scripts for hyperparam search. This is for making the redos script.")
     return parser.parse_args()
 

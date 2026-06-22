@@ -11,7 +11,7 @@
 #SBATCH --mail-user %u@byu.edu
 #SBATCH --output Pipeline/slurm_outputs/SC_smt/%j_%x.out
 #SBATCH --job-name=SC_smt.es-an
-#SBATCH --qos matrix
+#SBATCH --qos cs
 
 python Pipeline/clean_slurm_outputs.py
 bash Pipeline/train_SC.sh Pipeline/cfg/SC_SMT/es-an.smt.cfg

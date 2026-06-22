@@ -17,6 +17,6 @@
 nvidia-smi
 
 python Pipeline/clean_slurm_outputs.py
-bash Pipeline/pred_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH_OC_ABL/fr-oc.251.cfg
+bash Pipeline/pred_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/fr-oc.251.cfg
 python Pipeline/clean_slurm_outputs.py
 rm core*
