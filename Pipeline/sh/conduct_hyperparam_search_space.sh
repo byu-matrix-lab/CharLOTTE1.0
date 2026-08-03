@@ -37,7 +37,7 @@ rm -r ${DATA_HOME}/data/COGNATE_TRAIN/fr-*
 # exit
 
 python Pipeline/make_hyperparam_search_space.py \
-    --cfgs Pipeline/cfg/SC/fr-mfe.cfg,Pipeline/cfg/SC/es-an.cfg,Pipeline/cfg/SC/fr-oc.cfg
+    --cfgs Pipeline/cfg/SC/fr-mfe.cfg,Pipeline/cfg/SC/es-an.cfg,Pipeline/cfg/SC/fr-oc.cfg,Pipeline/cfg/SC/uz-kaa.cfg
 
 # echo "CREATED SEARCH SPACE BUT DID NOT RUN"
 

@@ -19,7 +19,9 @@ nlp = {
     "lua": multi_nlp,
     "bem": multi_nlp,
     "ewe": multi_nlp,
-    "fon": multi_nlp
+    "fon": multi_nlp,
+    "uz": multi_nlp,
+    "kaa": multi_nlp
 }
 import argparse
 from tqdm import tqdm

@@ -11,6 +11,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 
 conda create python=3.10.18 --name char1.0 -y
 conda create python=3.8.20 --name cop_mt -y
+conda create python=3.9 --name bleurt-env -y
 
 conda activate cop_mt
 pip install -r requirements.copper.txt
@@ -46,3 +47,28 @@ conda activate char1.0
 cd ../../../../data
 git clone https://github.com/byu-matrix-lab/data-cleaning-pipeline.git --branch v0.1.0
 cd ..
+
+conda activate bleurt-env
+conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1 -y
+pip install "tensorflow==2.11.*"
+
+git clone https://github.com/google-research/bleurt.git
+cd bleurt
+pip install .
+
+pip install "numpy<2"
+
+
+mkdir -p $CONDA_PREFIX/etc/conda/activate.d
+echo 'export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+
+wget https://storage.googleapis.com/bleurt-oss-21/BLEURT-20.zip
+unzip BLEURT-20.zip
+
+cd ..
+mv run_bleurt.sh bleurt/run_bleurt.sh
+mv bleurt_sbatch.sh bleurt/bleurt_sbatch.sh
+
+
+# ngram_correspondences
+mkdir -p Ngram_Correspondences/counts
