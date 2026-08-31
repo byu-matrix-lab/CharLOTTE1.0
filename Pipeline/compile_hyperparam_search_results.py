@@ -1,9 +1,12 @@
 import argparse
 import os
-import xlsxwriter
+import xlsxwriter # have to import this into cop_mt so that we can use fairseq to check model size
 from xlsxwriter.color import Color
 from tqdm import tqdm
 import datetime
+import sys
+import torch
+from fairseq import checkpoint_utils, utils
 
 WITH_ATT = {"EN-DJK"}
 
@@ -46,7 +49,8 @@ def compile(
         "batch_size": 9,
         "dropout": 10,
         "learning_rate": 11,
-        "BLEU": 12
+        "model_size":12,
+        "BLEU": 13
     }
 
     REDOS = {}
@@ -125,7 +129,8 @@ def compile(
                 assert rnn_params == results_rnn_params
                 print("\tpassed :)")
                 scores_f = os.path.join(COPPERMT_results_dir, f"workspace/reference_models/bilingual/rnn_{src_lang}-{tgt_lang}/0/results/test_on_val_selected_checkpoint_{src_lang}_{tgt_lang}.{tgt_lang}/generate-valid.hyp.scores.txt.wo_replace_unk.txt")
-            
+                model_f = os.path.join(COPPERMT_results_dir, f"workspace/reference_models/bilingual/rnn_{src_lang}-{tgt_lang}/0/checkpoints/checkpoint_best.pt")
+
             
             if os.path.exists(scores_f):
                 print("READING BLEU FROM", scores_f)
@@ -137,6 +142,13 @@ def compile(
                 REDOS[lang_pair_tuple].append((rnn_id, f))
                 print("Scores file does not exist:", scores_f)
 
+            if os.path.exists(model_f):
+                print('READING MODEL SIZE FROM', model_f)
+                model_size = get_model_size(model_f)
+            else:
+                model_size = 0
+                print("Model size could not be read:", model_f)
+
             assert rnn_id not in visited_rnn_ids
             assert int(rnn_id) not in visited_rnn_ids
             visited_rnn_ids.add(rnn_id)
@@ -146,6 +158,7 @@ def compile(
                 if param in ["share_encoder", "share_decoder"]: continue
                 worksheet.write(int(rnn_id) + 1, header[param], param_val, param_format)
             worksheet.write(int(rnn_id) + 1, header["BLEU"], BLEU, BLEU_format)
+            worksheet.write(int(rnn_id) + 1, header["model_size"], model_size)
 
             if BEST_BLEU is None:
                 BEST_BLEU = (int(rnn_id) + 1, header["BLEU"], BLEU, BLEU_format)
@@ -273,6 +286,26 @@ def read_scores(f):
     assert BLEU is not None
     return BLEU
 
+def get_model_size(f):
+    # 1. Add CopperMT directories to Python's search path
+    # (Using both root and child dirs ensures any internal relative imports don't break)
+    sys.path.append("/home/pbickel/CharLOTTE1.0/CopperMT/CopperMT") # need to add CharLOTTE home
+    sys.path.append("/home/pbickel/CharLOTTE1.0/CopperMT/CopperMT/pipeline/neural_translation")
+
+    # 2. Force Python to execute the file containing the registration decorator
+    import pipeline.neural_translation.multilingual_rnns.multilingual_rnn
+    # Point directly to the neural_translation root directory
+    user_dir = "/home/pbickel/CharLOTTE1.0/CopperMT/CopperMT/pipeline/neural_translation"
+    
+    # This forces fairseq to load CopperMT's custom registry
+    utils.import_user_module(argparse.Namespace(user_dir=user_dir))
+
+    # Now fairseq can successfully look up 'multilingual_bigru'
+    ensemble, cfg, task = checkpoint_utils.load_model_ensemble_and_task([f])
+    model = ensemble[0]
+
+    total_params = sum(p.numel() for p in model.parameters())
+    return total_params
 
 def read_rnn_params_f(f):
     print("READING PARAMS f", f)

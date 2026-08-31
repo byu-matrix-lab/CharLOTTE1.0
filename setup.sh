@@ -68,6 +68,7 @@ unzip BLEURT-20.zip
 cd ..
 mv run_bleurt.sh bleurt/run_bleurt.sh
 mv bleurt_sbatch.sh bleurt/bleurt_sbatch.sh
+mv paired_ar_significance.py bleurt/paired_ar_significance.py
 
 
 # ngram_correspondences

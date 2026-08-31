@@ -111,13 +111,22 @@ if [ -d $COPPER_MT_PREP_OUT_DIR ]; then
 fi
 mkdir $COPPER_MT_PREP_OUT_DIR
 
-if [[ "$PARALLEL_VAL" == *"uz-kaa"* ]]; then
-  PARALLEL_FILES=( "$PARALLEL_TRAIN" "$PARALLEL_TEST" )
-else
-  PARALLEL_FILES=( "$PARALLEL_TRAIN" "$PARALLEL_VAL" "$PARALLEL_TEST" )
-fi
-IFS="," read -r -a APPLY_TO_FILES <<< $APPLY_TO
-ALL_CSV_FILES=( "${PARALLEL_FILES[@]}" "${APPLY_TO_FILES[@]}" )
+
+# does inference on all three pl --> tl files, but ensure that the train file is last so that generate-test.txt is from the train file
+IFS="," read -r -a APPLY_TO_FILES <<< "$APPLY_TO"
+
+ALL_CSV_FILES=()
+TRAIN_FILE=""
+for f in "${APPLY_TO_FILES[@]}"; do
+    if [[ "$f" == *train.csv ]]; then
+        TRAIN_FILE="$f"
+    else
+        ALL_CSV_FILES+=("$f")
+    fi
+done
+[[ -n "$TRAIN_FILE" ]] && ALL_CSV_FILES+=("$TRAIN_FILE")
+
+
 echo "-- APPLYING SC MODEL TO FILES --"
 for f in ${ALL_CSV_FILES[@]} ; do
     if [ $f = "null" ]
