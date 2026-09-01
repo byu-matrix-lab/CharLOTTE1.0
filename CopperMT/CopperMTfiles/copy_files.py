@@ -16,4 +16,6 @@ for f in os.listdir("neural_translation"):
 for f in os.listdir("statistical_translation"):
     f = os.path.join("statistical_translation", f)
     shutil.copy(f, "../CopperMT/pipeline/statistical_translation")
-    
+
+shutil.copy("etymdb/extractor_script_cognates_wCommandline_args.py", "../CopperMT/pipeline/data")
+shutil.copy("etymdb/language_info.py", "../CopperMT/pipeline/data/management/from_etymdb/utils")
