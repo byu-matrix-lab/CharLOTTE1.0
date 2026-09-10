@@ -249,14 +249,45 @@ bash NMT/compile_results.sh
 ```
 Scores will be written to NMT_results.txt
 
-# Meaningful Mappings
-Get the meaningful mappings data used to characterize the OC models:
+# Additional Tests
+## Vocabulary Overlap
+Get Jensen-Shannon divergence and Jaccard similarity to measure vocabulary overlap between PL and CL compared to PL' and CL.
+
+Not on HPC:
+
+To run for a single language pair:
 ```
-bash Ngram_Correspondences/sh/all.sh
-```
-To run for a single language scenario (replace *"es-an"* with the desired language pair):
-```
-bash Ngram_Correspondences/sh/es-an.sh
+bash NMT/vocab_overlap/token_overlap_spm.es-an.sh
 ```
 
-Scores will be written to Ngram_Correspondences/results.xlsx
+For the *fr/mfe→en* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
+
+**You can also optionally train all tokenizers at once by running *NMT/vocab_overlap/token_overlap_spm.all.sh***
+
+On HPC:
+
+To run for a single language pair:
+```
+sbatch NMT/vocab_overlap/token_overlap_spm.es-an.sh
+```
+> **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
+
+For the *fr/mfe→en* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
+
+**You can also optionally train all tokenizers at once by running *NMT/vocab_overlap/token_overlap_spm.all_sbatch.sh***
+
+When finished, compile results:
+
+```
+bash NMT/vocab_overlap/compile_token_overlap.sh
+```
+
+Results will be printed to NMT/vocab_overlap/results/vocab_overlap_results_summary.txt
