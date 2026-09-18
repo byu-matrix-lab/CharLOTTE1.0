@@ -61,3 +61,4 @@ Pipeline/cfg/SC/fr-mfe_gt_val.cfg
 Pipeline/sh/fr_oc_reruns.sh
 NMT/vocab_overlap/results/
 NMT/delta_metrics/results/
+Pipeline/sbatch/hyperparam_search-before-exp/

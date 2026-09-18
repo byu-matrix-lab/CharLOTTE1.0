@@ -119,6 +119,41 @@ To run on all 4 language pairs at once:
 bash Ngram_Correspondences/sh/all.sh
 ```
 
+### Evaluate OC Models on True Cognate Pairs
+To evaluate on true cognates from CogNet and Etymdb on a single language pair:
+
+Prepare the data and run inference:
+
+On HPC:
+```
+bash Pipeline/true_cognate/sbatch/prepare_cognate_test.es-an.sh
+```
+
+Not on HPC:
+```
+bash Pipeline/true_cognate/sh/prepare_cognate_test.es-an.sh
+```
+For the *fr/mfe* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+To run all scenarios together, replace *"es-an.sh"* with *"all.sh"*
+
+Evaluate the true cognate pairs:
+```
+bash Pipeline/true_cognate/sh/eval_cognate_test.es-an.sh
+```
+For the *fr/mfe* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+To evaluate all scenarios together, replace *"es-an.sh"* with *"all.sh"*
+
+Results will be written to Pipeline/true_cognate/cognate_eval_results.txt
+
+**CogNet and Etymdb do not have data for uz-kaa**
+
+
 ### Train NMT Tokenizers
 **Tokenizers for transfer learning and simple baseline NMT models:**
 
