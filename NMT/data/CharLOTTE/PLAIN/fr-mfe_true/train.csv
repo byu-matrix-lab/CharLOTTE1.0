@@ -1,2 +1,2 @@
 src_lang,tgt_lang,src_path,tgt_path
-fr,mfe,/home/pbickel/CharLOTTE1.0/true_cognate_data/true_cognates.fr-mfe.fr.txt,/home/pbickel/CharLOTTE1.0/true_cognate_data/true_cognates.fr-mfe.mfe.txt
+fr,mfe,${CHARLOTTE_HOME}/Pipeline/true_cognate/data/true_cognates.fr-mfe.fr.txt,${CHARLOTTE_HOME}/Pipeline/true_cognate/data/true_cognates.fr-mfe.mfe.txt

@@ -284,6 +284,20 @@ bash NMT/compile_results.sh
 ```
 Scores will be written to NMT_results.txt
 
+# Compile BLEURT Scores
+On HPC:
+```
+sbatch bleurt/bleurt_sbatch.sh
+```
+> **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
+
+Not on HPC:
+```
+bash bleurt/run_bleurt.sh
+```
+
+Results will be written to bleurt/bleurt_results_with_significance.txt
+
 # Additional Tests
 ## Vocabulary Overlap
 Get Jensen-Shannon divergence and Jaccard similarity to measure vocabulary overlap between PL and CL compared to PL' and CL.
@@ -301,7 +315,7 @@ For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
 
 For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
 
-**You can also optionally train all tokenizers at once by running *NMT/vocab_overlap/token_overlap_spm.all.sh***
+**You can also optionally test all scenarios at once by running *NMT/vocab_overlap/token_overlap_spm.all.sh***
 
 On HPC:
 
@@ -317,7 +331,7 @@ For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
 
 For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
 
-**You can also optionally train all tokenizers at once by running *NMT/vocab_overlap/token_overlap_spm.all_sbatch.sh***
+**You can also optionally test all scenarios at once by running *NMT/vocab_overlap/token_overlap_spm.all_sbatch.sh***
 
 When finished, compile results:
 

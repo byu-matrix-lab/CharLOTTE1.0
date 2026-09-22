@@ -1,2 +1,2 @@
 src_lang,tgt_lang,src_path,tgt_path
-es,an,/home/pbickel/CharLOTTE1.0/true_cognate_data/true_cognates.es-an.es.txt,/home/pbickel/CharLOTTE1.0/true_cognate_data/true_cognates.es-an.an.txt
+es,an,${CHARLOTTE_HOME}/Pipeline/true_cognate/data/true_cognates.es-an.es.txt,${CHARLOTTE_HOME}/Pipeline/true_cognate/data/true_cognates.es-an.an.txt

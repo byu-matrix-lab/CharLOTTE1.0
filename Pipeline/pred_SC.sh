@@ -115,7 +115,11 @@ mkdir $COPPER_MT_PREP_OUT_DIR
 # does inference on all three pl --> tl files, but ensure that the train file is last so that generate-test.txt is from the train file
 IFS="," read -r -a APPLY_TO_FILES <<< "$APPLY_TO"
 
-ALL_CSV_FILES=()
+# Parallel files first
+ALL_CSV_FILES=("$PARALLEL_TRAIN" "$PARALLEL_TEST" "$PARALLEL_VAL")
+
+# Then APPLY_TO files, with train held back until last
+
 TRAIN_FILE=""
 for f in "${APPLY_TO_FILES[@]}"; do
     if [[ "$f" == *train.csv ]]; then

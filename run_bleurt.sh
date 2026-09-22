@@ -4,7 +4,11 @@ set -euo pipefail
 source .env
 
 echo $DATA_HOME
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate bleurt-env
 cd bleurt
+
 
 BASE_DIR="$DATA_HOME/CognateMT/PredictCognates"
 OUTPUT_FILE="bleurt_results_with_significance.txt"

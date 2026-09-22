@@ -9,14 +9,14 @@ input_file = "CogNet-v2.0.tsv"
 
 tags = {"es":"spa", "an":"arg", "fr":"fra", "oc":"oci"}
 
-train_val_files_dict = {"es-an-train":"/CopperMT/ES-AN-RNN-0_RNN-213_S-0/inputs/split_data/es_an/inference/train_es_an.",
-                        "es-an-val":"/CopperMT/ES-AN-RNN-0_RNN-213_S-0/inputs/split_data/es_an/inference/fine_tune_es_an.",
-                        "fr-oc-train":"/CopperMT/FR-OC-RNN-0_RNN-251_S-0/inputs/split_data/fr_oc/inference/train_fr_oc.",
-                        "fr-oc-val":"/CopperMT/FR-OC-RNN-0_RNN-251_S-0/inputs/split_data/fr_oc/inference/fine_tune_fr_oc.",
-                        "fr-mfe-train":"/CopperMT/FR-MFE-RNN-0_RNN-102_S-0/inputs/split_data/fr_mfe/inference/train_fr_mfe.",
-                        "fr-mfe-val":"/CopperMT/FR-MFE-RNN-0_RNN-102_S-0/inputs/split_data/fr_mfe/inference/fine_tune_fr_mfe.",
-                        # "uz-kaa-train":"/CopperMT/UZ-KAA-RNN-0_RNN-264_S-0/inputs/split_data/uz_kaa/inference/train_uz_kaa.",
-                        # "uz-kaa-val":"/CopperMT/UZ-KAA-RNN-0_RNN-264_S-0/inputs/split_data/uz_kaa/inference/fine_tune_uz_kaa."
+train_val_files_dict = {"es-an-train":"/CopperMT/ES-AN-RNN-0_RNN-213_S-0/inputs/split_data/es_an/0/train_es_an.",
+                        "es-an-val":"/CopperMT/ES-AN-RNN-0_RNN-213_S-0/inputs/split_data/es_an/0/fine_tune_es_an.",
+                        "fr-oc-train":"/CopperMT/FR-OC-RNN-0_RNN-251_S-0/inputs/split_data/fr_oc/0/train_fr_oc.",
+                        "fr-oc-val":"/CopperMT/FR-OC-RNN-0_RNN-251_S-0/inputs/split_data/fr_oc/0/fine_tune_fr_oc.",
+                        "fr-mfe-train":"/CopperMT/FR-MFE-RNN-0_RNN-102_S-0/inputs/split_data/fr_mfe/0/train_fr_mfe.",
+                        "fr-mfe-val":"/CopperMT/FR-MFE-RNN-0_RNN-102_S-0/inputs/split_data/fr_mfe/0/fine_tune_fr_mfe.",
+                        # "uz-kaa-train":"/CopperMT/UZ-KAA-RNN-0_RNN-264_S-0/inputs/split_data/uz_kaa/0/train_uz_kaa.",
+                        # "uz-kaa-val":"/CopperMT/UZ-KAA-RNN-0_RNN-264_S-0/inputs/split_data/uz_kaa/0/fine_tune_uz_kaa."
                         }
 
 
