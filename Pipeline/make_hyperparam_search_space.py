@@ -15,7 +15,6 @@ SBATCH_TEMPLATE="""
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user %u@byu.edu
 #SBATCH --output Pipeline/slurm_outputs/hyper_param_search_outputs{tag}/%j_%x.out
 #SBATCH --job-name=hyper_param_search.{NAME}
 #SBATCH --qos cs
@@ -57,7 +56,7 @@ def make_stuff(
     for idx, (lr, batch_size, e_dim, h_dim, n_layers, att) in enumerate(params):
         params_f = os.path.join(out_dir, f"{idx}.rnn.txt")
         assert idx not in manifest
-        manifest[idx] = params_f
+        manifest[idx] = f"{idx}.rnn.txt"
         content =   f"model_type=\"bigru\"\n"
         content +=  f"attention=\"{att}\"\n"
         content +=  f"enc_layer={n_layers}\n"

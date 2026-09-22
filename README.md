@@ -62,12 +62,14 @@ The results will appear in *Pipeline/hyperparam_search_results*
 
 
 ## CharLOTTE and Baseline Pipelines
-The documentation will demonstrate how to reproduce our results for the *es/an→en* scenario, with notes on how to run the *fr/mfe→en* and *fr/oc→en* scenarios.
+The documentation will demonstrate how to reproduce our results for the *es/an→en* scenario, with notes on how to run the *fr/mfe→en*, *fr/oc→en*, and *uz/kaa→en* scenarios.
 
 ### Train OC Model
 For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
 
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
+
+For the *uz/kaa→en* scenario, replace *"es-an.213.cfg"* with *"uz-kaa.264.cfg"*
 
 Not on HPC:
 ```
@@ -85,6 +87,8 @@ For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"
 
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
 
+For the *uz/kaa→en* scenario, replace *"es-an.213.cfg"* with *"uz-kaa.264.cfg"*
+
 Not on HPC:
 ```
 bash Pipeline/pred_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
@@ -97,6 +101,58 @@ sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
+### OC Model Characterization ###
+To run the OC N-Gram Correspondence Characterization on a single language pair:
+
+```
+bash Ngram_Correspondences/sh/es-an.sh
+```
+For the *fr/mfe→en* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
+
+
+To run on all 4 language pairs at once:
+```
+bash Ngram_Correspondences/sh/all.sh
+```
+
+### Evaluate OC Models on True Cognate Pairs
+To evaluate on true cognates from CogNet and Etymdb on a single language pair:
+
+Prepare the data and run inference:
+
+On HPC:
+```
+bash Pipeline/true_cognate/sbatch/prepare_cognate_test.es-an.sh
+```
+
+Not on HPC:
+```
+bash Pipeline/true_cognate/sh/prepare_cognate_test.es-an.sh
+```
+For the *fr/mfe* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+To run all scenarios together, replace *"es-an.sh"* with *"all.sh"*
+
+Evaluate the true cognate pairs:
+```
+bash Pipeline/true_cognate/sh/eval_cognate_test.es-an.sh
+```
+For the *fr/mfe* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+To evaluate all scenarios together, replace *"es-an.sh"* with *"all.sh"*
+
+Results will be written to Pipeline/true_cognate/cognate_eval_results.txt
+
+**CogNet and Etymdb do not have data for uz-kaa**
+
 
 ### Train NMT Tokenizers
 **Tokenizers for transfer learning and simple baseline NMT models:**
@@ -104,6 +160,9 @@ sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 For the *fr/mfe→en* scenario, replace *"es-an_en"* with *"fr-mfe_en"*
 
 For the *fr/oc→en* scenario, replace *"es-an_en"* with *"fr-oc_en"*
+
+For the *uz/kaa→en* scenario, replace *"es-an_en"* with *"uz-kaa_en"*
+
 ```
 bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es-an_en.cfg
 ```
@@ -113,6 +172,9 @@ bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es-an_en.cfg
 For the *fr/mfe→en* scenario, replace *"es2an-an_en"* with *"fr2mfe-mfe_en"*
 
 For the *fr/oc→en* scenario, replace *"es2an-an_en"* with *"fr2oc-oc_en"*
+
+For the *uz/kaa→en* scenario, replace *"es2an-an_en"* with *"uz2kaa-kaa_en"*
+
 ```
 bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es2an-an_en.cfg
 ```
@@ -145,6 +207,8 @@ The following scripts should now be created. They were written to run on an HPC 
 For the *fr/mfe→en* scenario, replace *"an-en"* in each of the script paths below with *"mfe-en"*
 
 For the *fr/oc→en* scenario, replace *"an-en"* in each of the script paths below with *"oc-en"*
+
+For the *uz/kaa→en* scenario, replace *"an-en"* in each of the script paths below with *"kaa-en"*
 
 ##### Simple baseline model
 Train:
@@ -179,7 +243,7 @@ bash NMT/sbatch/TEST/an-en/all_FINETUNE.sh
 ```
 
 #### Reverse translation directions
-To train the NMT models that translate into the low-resource directions, i.e. *en→es/an*, *en→fr/mfe*, *en→fr/oc*, you will do the same but with different paths:
+To train the NMT models that translate into the low-resource directions, i.e. *en→es/an*, *en→fr/mfe*, *en→fr/oc*, *en→uz/kaa* you will do the same but with different paths:
 
 ##### Simple baseline model
 Train:
@@ -213,4 +277,66 @@ When done, test the child models:
 bash NMT/sbatch/TEST.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_FINETUNE.sh
 ```
 
-# TODO compile the scores
+# Compile Scores
+Compile scores for all NMT Models:
+```
+bash NMT/compile_results.sh
+```
+Scores will be written to NMT_results.txt
+
+# Compile BLEURT Scores
+On HPC:
+```
+sbatch bleurt/bleurt_sbatch.sh
+```
+> **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
+
+Not on HPC:
+```
+bash bleurt/run_bleurt.sh
+```
+
+Results will be written to bleurt/bleurt_results_with_significance.txt
+
+# Additional Tests
+## Vocabulary Overlap
+Get Jensen-Shannon divergence and Jaccard similarity to measure vocabulary overlap between PL and CL compared to PL' and CL.
+
+Not on HPC:
+
+To run for a single language pair:
+```
+bash NMT/vocab_overlap/token_overlap_spm.es-an.sh
+```
+
+For the *fr/mfe→en* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
+
+**You can also optionally test all scenarios at once by running *NMT/vocab_overlap/token_overlap_spm.all.sh***
+
+On HPC:
+
+To run for a single language pair:
+```
+sbatch NMT/vocab_overlap/token_overlap_spm.es-an.sh
+```
+> **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
+
+For the *fr/mfe→en* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
+
+For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
+
+For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
+
+**You can also optionally test all scenarios at once by running *NMT/vocab_overlap/token_overlap_spm.all_sbatch.sh***
+
+When finished, compile results:
+
+```
+bash NMT/vocab_overlap/compile_token_overlap.sh
+```
+
+Results will be printed to NMT/vocab_overlap/results/vocab_overlap_results_summary.txt

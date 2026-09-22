@@ -15,12 +15,14 @@ wikimat=$raw_data/WikiMatrix
 ccmat=$raw_data/CCMatrix
 nllb=$raw_data/nllb
 kreyolmt=$raw_data/Kreyol-MT
+oldi=$raw_data/OLDI
 mkdir $flores
 mkdir $opensub
 mkdir $wikimat
 mkdir $ccmat
 mkdir $nllb
 mkdir $kreyolmt
+mkdir $oldi
 
 ########################## FLORES+ ##########################
 an_flores=arg_Latn_arag1245
@@ -146,6 +148,47 @@ gunzip $oc_en_nllb_tmx
 
 # fr --> en
 # Already got it above ^^
+
+
+
+
+########################## uz/kaa --> en ##########################
+uz_en_nllb=$nllb/uz_en
+mkdir $uz_en_nllb
+wget -O - https://object.pouta.csc.fi/OPUS-NLLB/v1/tmx/en-uz.tmx.gz | gunzip | head -c 3000M > $uz_en_nllb/en-uz.tmx
+
+head -n 54899502 $uz_en_nllb/en-uz.tmx > $uz_en_nllb/en-uz.tmx.trunc
+# # Truncate it to line 54899502
+rm $uz_en_nllb/en-uz.tmx
+mv $uz_en_nllb/en-uz.tmx.trunc $uz_en_nllb/en-uz.tmx
+# # Fix the bottom
+last_tu=$(grep -an "</tu>" $uz_en_nllb/en-uz.tmx | tail -1 | cut -d: -f1)
+head -n $last_tu $uz_en_nllb/en-uz.tmx > $uz_en_nllb/en-uz.temp.tmx
+rm $uz_en_nllb/en-uz.tmx
+mv $uz_en_nllb/en-uz.temp.tmx $uz_en_nllb/en-uz.tmx
+printf "\n  </body>\n</tmx>\n" >> $uz_en_nllb/en-uz.tmx
+uz_en_nllb_tmx=$uz_en_nllb/en-uz.tmx
+
+uz_kaa_oldi=$oldi/uz_kaa
+kaa_en_oldi=$oldi/kaa_en
+mkdir $uz_kaa_oldi
+mkdir $kaa_en_oldi
+
+uz_flores=uzn_Latn_nort2690
+uz_flores_dev_path=$raw_data/flores+/dev/$uz_flores.dev
+uz_flores_devtest_path=$raw_data/flores+/devtest/$uz_flores.devtest
+
+kaa_flores=kaa_Latn_kara1467
+kaa_flores_devtest_path=$raw_data/flores+/devtest/$kaa_flores.devtest
+
+python data/download_uz_kaa.py \
+    -t $HF_TOKEN \
+    --uz_kaa_output $uz_kaa_oldi \
+    --kaa_en_output $kaa_en_oldi \
+    --uz_dev_output $uz_flores_dev_path \
+    --uz_devtest_output $uz_flores_devtest_path \
+    --kaa_devtest_output $kaa_flores_devtest_path
+
 
 
 echo "ALL DATA DOWNLOADED"

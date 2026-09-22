@@ -7,9 +7,8 @@
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user %u@byu.edu
+#SBATCH --mail-user %pbickel@byu.edu
 #SBATCH --output %j_%x.out
-#SBATCH --qos=matrix
 #SBATCH --job-name=clean_charlotte_1.0_data
 
 

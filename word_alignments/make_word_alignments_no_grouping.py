@@ -93,7 +93,12 @@ if __name__ == "__main__":
     with open(args.sent_pairs) as inf:
         for line in inf:
             line = line.strip()
-            src, tgt = tuple(line.split(" ||| "))
+            try:
+                src, tgt = tuple(line.split(" ||| "))
+            except ValueError: # on line 42013 of kaa train there is a line with " ||| " in it
+                src, tgt, extra = tuple(line.split(" ||| "))
+                tgt = " ||| ".join([tgt, extra])
+
             sent_pairs.append((src.strip(), tgt.strip()))
 
     word_list = make_word_list(

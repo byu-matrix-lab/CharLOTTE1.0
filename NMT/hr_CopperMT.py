@@ -6,6 +6,19 @@ from string import punctuation
 punctuation += "-—¡¿؟؛،٪»«›‹”“〞❮❯❛❟%."
 import re
 import csv
+from collections import Counter
+
+def set_env(path=".env"):
+    assert os.path.exists(path), f"NO .env FILE FOUND"
+    with open(path) as env_file:
+        for line in env_file:
+            line = line.strip()
+            if "#" in line:
+                line = line.split("#")[0].strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, val = line.partition("=")
+                os.environ.setdefault(key.strip(), val.strip())
+set_env()
 
 print("loading indicnlp tokenizer")
 from indicnlp.tokenize import indic_tokenize 
@@ -40,7 +53,9 @@ spacy_nlp = {
     "lua": multi_nlp,
     "bem": multi_nlp,
     "ewe": multi_nlp,
-    "fon": multi_nlp
+    "fon": multi_nlp,
+    "uz": multi_nlp,
+    "kaa": multi_nlp
 }
 print("ALL TOKENIZERS LOADED")
 from parallel_datasets import MultilingualDataset
@@ -227,7 +242,7 @@ def retrieve(
             write_out_f = f"{data_f[:-len(ext)]}SC_{MODEL_ID}_{hr_lang}2{lr_lang}.{ext}"
         print("\twill write output to", write_out_f)
 
-        with open(data_f) as inf:
+        with open(os.path.expandvars(data_f)) as inf:
             data = [line.strip() for line in inf.readlines()]
 
         print("HR_LANG", hr_lang)
@@ -245,6 +260,9 @@ def retrieve(
             print(f"Using nltk_tokenize, lang={hr_lang}")
             word_tokenize = nltk_tokenize
 
+
+        counts = Counter()
+
         print("Replacing words")
         new_data = []
         unique_orig_words = set()
@@ -260,6 +278,9 @@ def retrieve(
                         word_result = CopperMT_results[cleaned_word]
                         assert isinstance(word_result, str)
                         word = word.replace(cleaned_word, word_result)
+
+                        counts[cleaned_word] += 1
+
                     else:
                         NOT_IN_COPPER_MT_RESULTS.add(cleaned_word)
                     token_words[w] = word
@@ -269,12 +290,18 @@ def retrieve(
                 
             new_data.append(line)
 
+
+        data_f_list = data_f.split('/')
+        with open(f'/home/pbickel/CharLOTTE1.0/Ngram_Correspondences/counts/{data_f_list[-2]}.{data_f_list[-1]}.{MODEL_ID}.counts.txt', 'w') as counts_file:
+            for word in counts:
+                counts_file.write(f"{word},{counts[word]}\n")
+
         print("NOT IN COPPER MT RESULTS", len(NOT_IN_COPPER_MT_RESULTS))
         for item in NOT_IN_COPPER_MT_RESULTS:
             print(f"\t- `{item}`")
         
         print("Writing final_results to", write_out_f)
-        with open(write_out_f, "w") as outf:
+        with open(os.path.expandvars(write_out_f), "w") as outf:
             outf.write("\n".join(new_data) + "\n")
 
         print("UNIQUE WORDS IN ORIG DATA:", len(unique_orig_words))
@@ -395,6 +422,9 @@ def read_CopperMT_Results(results_f, RETURN_SPACED=False, log_p_thresh=None):
     data_rows = []
     for lx, line in enumerate(lines):
         split_line = line.split("|")
+        if "4 | = | 9" in line or '1 6 | 2 0 |' in line:
+            split_line = line
+            print("exception made for | occuring in word")
         if len(split_line) == 4:
             assert split_line[1].strip() == "INFO"
             continue

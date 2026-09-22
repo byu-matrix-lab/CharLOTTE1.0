@@ -16,12 +16,15 @@ wikimat=$raw_data/WikiMatrix
 ccmat=$raw_data/CCMatrix
 nllb=$raw_data/nllb
 kreyolmt=$raw_data/Kreyol-MT
+oldi=$raw_data/OLDI
 
 an_flores=arg_Latn_arag1245
 en_flores=eng_Latn_stan1293
 es_flores=spa_Latn_amer1254
 fr_flores=fra_Latn_stan1290
 oc_flores=oci_Latn_occi1239
+uz_flores=uzn_Latn_nort2690
+kaa_flores=kaa_Latn_kara1467
 
 
 ################# es/an --> en #################
@@ -135,3 +138,63 @@ python -m data.make_training_data \
     --tgt_lang oc \
     --out_dir $DATA_DIR
 
+################# uz/kaa --> en #################
+echo ""
+echo ""
+echo "################# uz/kaa --> en #################"
+# uz --> en
+python -m data.make_training_data \
+    --src_train $nllb/uz_en/cleaned/tgt.txt \
+    --tgt_train $nllb/uz_en/cleaned/src.txt \
+    --src_val $flores/dev/$uz_flores.dev \
+    --tgt_val $flores/dev/$en_flores.dev \
+    --src_test $flores/devtest/$uz_flores.devtest \
+    --tgt_test $flores/devtest/$en_flores.devtest \
+    --src_lang uz \
+    --tgt_lang en \
+    --out_dir $DATA_DIR
+
+
+
+# uz --> kaa
+python -m data.make_training_data \
+    --src_train $oldi/uz_kaa/cleaned/src.txt \
+    --tgt_train $oldi/uz_kaa/cleaned/tgt.txt \
+    --src_test $flores/devtest/$uz_flores.devtest \
+    --tgt_test $flores/devtest/$kaa_flores.devtest \
+    --src_lang uz \
+    --tgt_lang kaa \
+    --out_dir $DATA_DIR
+
+# get subset of kaa-en train for val (no dev in flores)
+kaa_en_val_f=$oldi/kaa_en/val
+mkdir $kaa_en_val_f
+kaa_f=$oldi/kaa_en/cleaned/src.txt
+en_f=$oldi/kaa_en/cleaned/tgt.txt
+N_lines=2000
+
+paste "$kaa_f" "$en_f" | shuf --random-source=<(yes 12) > combined_shuf.txt
+
+head -n "$N_lines" combined_shuf.txt > subset.txt
+tail -n +"$((N_lines+1))" combined_shuf.txt > remainder.txt
+
+cut -f1 subset.txt > $kaa_en_val_f/src.txt
+cut -f2 subset.txt > $kaa_en_val_f/tgt.txt
+
+cut -f1 remainder.txt > "$kaa_f"
+cut -f2 remainder.txt > "$en_f"
+
+rm combined_shuf.txt subset.txt remainder.txt
+
+
+# kaa --> en
+python -m data.make_training_data \
+    --src_train $oldi/kaa_en/cleaned/src.txt \
+    --tgt_train $oldi/kaa_en/cleaned/tgt.txt \
+    --src_val $oldi/kaa_en/val/src.txt \
+    --tgt_val $oldi/kaa_en/val/tgt.txt \
+    --src_test $flores/devtest/$kaa_flores.devtest \
+    --tgt_test $flores/devtest/$en_flores.devtest \
+    --src_lang kaa \
+    --tgt_lang en \
+    --out_dir $DATA_DIR

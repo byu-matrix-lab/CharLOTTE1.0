@@ -1,0 +1,2 @@
+src_lang,tgt_lang,src_path,tgt_path
+fr,oc,${CHARLOTTE_HOME}/Pipeline/true_cognate/data/true_cognates.fr-oc.fr.txt,${CHARLOTTE_HOME}/Pipeline/true_cognate/data/true_cognates.fr-oc.oc.txt

@@ -1,0 +1,2 @@
+src_lang,tgt_lang,src_path,tgt_path
+uz,en,${DATA_HOME}/data/CharLOTTE_data/uz-en/train.uz.SC_{SC_MODEL_ID}_uz2kaa.txt,${DATA_HOME}/data/CharLOTTE_data/uz-en/train.en.txt

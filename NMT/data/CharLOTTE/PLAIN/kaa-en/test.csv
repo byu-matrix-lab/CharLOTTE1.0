@@ -1,0 +1,2 @@
+src_lang,tgt_lang,src_path,tgt_path
+kaa,en,${DATA_HOME}/data/CharLOTTE_data/kaa-en/test.kaa.txt,${DATA_HOME}/data/CharLOTTE_data/kaa-en/test.en.txt
