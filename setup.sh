@@ -15,6 +15,7 @@ conda create python=3.9 --name bleurt-env -y
 
 conda activate cop_mt
 pip install -r requirements.copper.txt
+pip install XlsxWriter
 
 conda deactivate
 conda activate char1.0

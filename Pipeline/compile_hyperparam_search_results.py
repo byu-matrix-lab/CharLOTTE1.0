@@ -1,6 +1,6 @@
 import argparse
 import os
-import xlsxwriter # have to import this into cop_mt so that we can use fairseq to check model size
+import xlsxwriter
 from xlsxwriter.color import Color
 from tqdm import tqdm
 import datetime
