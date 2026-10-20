@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Original work: CopperMT (https://github.com/clefourrier/CopperMT)
+# by Clémentine Fourrier (clefourrier), licensed under GNU GPL 3.
+#
+# Modified by Brendan Hatch (BYU MATRIX Lab), 2026: 
+# This script is derived from the file CopperMT/pipeline/statistical_translation/model_test_nbest.sh 
+# of the CopperMT repository, adapted for running model inference.
+#
+# This file is licensed under the GNU General Public License v3.0.
+# See CopperMT/CopperMTfiles/LICENSE for the full text.
+
 while getopts n:m:w:d:i:o:t:h:b:r: o
 do  case "$o" in
 	m)	MOSES_DIR="$OPTARG";;

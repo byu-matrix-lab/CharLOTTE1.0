@@ -1,4 +1,17 @@
 #!/usr/bin/python
+
+# Original work: CopperMT (https://github.com/clefourrier/CopperMT)
+# by Clémentine Fourrier (clefourrier), licensed under GNU GPL 3.
+#
+# Modified by Brendan Hatch (BYU MATRIX Lab), 2026: 
+# Adapted from the CopperMT/pipeline/neural_translation/checkpoint_select_best_from_file.py file,
+# simply printing out the best checkpoint path and the path it's being copied to prior to the 
+# call to shutil.copyfile(). Also renamed the file name the best checkpoint is copied to.
+#
+# This file is licensed under the GNU General Public License v3.0.
+# See CopperMT/CopperMTfiles/LICENSE for the full text.
+
+
 import sys
 import shutil
 import pandas

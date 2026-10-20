@@ -1,4 +1,15 @@
 #!/usr/bin/env python
+
+# Original work: CopperMT (https://github.com/clefourrier/CopperMT)
+# by Clémentine Fourrier (clefourrier), licensed under GNU GPL 3.
+#
+# Modified by Brendan Hatch (BYU MATRIX Lab), 2026: 
+# Adapted from the CopperMT/pipeline/data/management/from_etymdb/utils/language_info.py,
+# adding support for Aragonese and Mauritian Creole.
+#
+# This file is licensed under the GNU General Public License v3.0.
+# See CopperMT/CopperMTfiles/LICENSE for the full text.
+
 """For each language, contains its ancestor and abbreviation to name mapping"""
 
 #  Full code to name list:

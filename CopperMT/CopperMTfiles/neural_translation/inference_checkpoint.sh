@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Original work: CopperMT (https://github.com/clefourrier/CopperMT)
+# by Clémentine Fourrier (clefourrier), licensed under GNU GPL 3.
+#
+# Modified by Brendan Hatch (BYU MATRIX Lab), 2026: 
+# Adapted from the CopperMT/pipeline/neural_translation/checkpoint_select_best.sh file
+# to run a parameterized checkpoint on either the validation or test set.
+#
+# This file is licensed under the GNU General Public License v3.0.
+# See CopperMT/CopperMTfiles/LICENSE for the full text.
+
 DATA_BIN="data-bin";
 CP="checkpoints";
 

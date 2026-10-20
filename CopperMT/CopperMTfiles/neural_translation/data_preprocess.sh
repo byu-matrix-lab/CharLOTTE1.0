@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Original work: CopperMT (https://github.com/clefourrier/CopperMT)
+# by Clémentine Fourrier (clefourrier), licensed under GNU GPL 3.
+#
+# Modified by Brendan Hatch (BYU MATRIX Lab), 2026: 
+# Adapted from the CopperMT/pipeline/neural_translation/data_preprocess.sh file,
+# simply printing out (echo) the fairseq-preprocess command with the arguments passed to it prior to 
+# being called.
+#
+# This file is licensed under the GNU General Public License v3.0.
+# See CopperMT/CopperMTfiles/LICENSE for the full text.
+
+
 DATA_BIN="data-bin"
 trainpref="train_"
 validpref="fine_tune_"

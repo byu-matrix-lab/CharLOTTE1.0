@@ -1,3 +1,14 @@
+# Original work: CopperMT (https://github.com/clefourrier/CopperMT)
+# by Clémentine Fourrier (clefourrier), licensed under GNU GPL 3.
+#
+# Modified by Brendan Hatch (BYU MATRIX Lab), 2026: 
+# Adapted from the CopperMT/pipeline/data/extractor_script_cognates.py file to support
+# commandline arguments, have working import of the CopperMT module, fix a csv parsing issue,
+# and remove datetime stamps from the output folder name. 
+#
+# This file is licensed under the GNU General Public License v3.0.
+# See CopperMT/CopperMTfiles/LICENSE for the full text.
+
 import itertools, os, datetime, sys
 from pathlib import Path
 import pandas as pd

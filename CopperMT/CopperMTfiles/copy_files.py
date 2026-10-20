@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 MATRIX Lab
+# This file is part of CharLOTTE and is MIT-licensed (see the top-level LICENSE).
+# The CopperMT-derived files in the subfolders of this directory are GPL-3.0.
+
 import os
 import shutil
 

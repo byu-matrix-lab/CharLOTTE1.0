@@ -1,4 +1,15 @@
 #!/bin/bash
+
+# Original work: CopperMT (https://github.com/clefourrier/CopperMT)
+# by Clémentine Fourrier (clefourrier), licensed under GNU GPL 3.
+#
+# Modified by Brendan Hatch (BYU MATRIX Lab), 2026: 
+# Adapted from the CopperMT/pipeline/main_smt_full.sh file of the CopperMT repository
+# to apply a single, parameterized seed.
+#
+# This file is licensed under the GNU General Public License v3.0.
+# See CopperMT/CopperMTfiles/LICENSE for the full text.
+
 source $1
 export WK_DIR INPUTS_DIR MOSES_DIR DATA_NAME lang
 

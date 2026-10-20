@@ -7,8 +7,14 @@ This repository was tested on **Red Hat Enterprise Linux 9.6 (Plow)**.
 
 > **_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
 
+## License
+CharLOTTE is released under the MIT License (see `LICENSE`).
+The subfolders in `CopperMT/CopperMTfiles/` contain scripts derived from
+[CopperMT](https://github.com/clefourrier/CopperMT) and are licensed
+under GPL-3.0 (see `CopperMT/CopperMTfiles/LICENSE`). `CopperMT/CopperMTfiles/copy_files.py` is part of CharLOTTE and is MIT-licensed.
+
 # Installation
-This codebase uses and expects *Conda* environments. The *setup.sh* assumes Conda is already installed and will create two environments `char1.0` and `cop_mt`. It will also install the [CopperMT](https://github.com/clefourrier/CopperMT), [Fast Align](https://github.com/clab/fast_align), and [BYU Matrix Data Cleaning Pipeline](https://github.com/byu-matrix-lab/data-cleaning-pipeline) codebases.
+This codebase uses and expects *Conda* environments. The *setup.sh* assumes Conda is already installed and will create two environments `char1.0` and `cop_mt`. It will also install the [CopperMT](https://github.com/clefourrier/CopperMT) (and copy our modified/derived scripts into it), [Fast Align](https://github.com/clab/fast_align), and [BYU Matrix Data Cleaning Pipeline](https://github.com/byu-matrix-lab/data-cleaning-pipeline) codebases.
 ```
 bash setup.sh
 ```
