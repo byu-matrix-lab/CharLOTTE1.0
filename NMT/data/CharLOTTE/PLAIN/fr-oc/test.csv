@@ -1,2 +1,2 @@
 src_lang,tgt_lang,src_path,tgt_path
-fr,oc,${DATA_HOME}/data/CharLOTTE_occitan/fr-oc/test.fr.txt,${DATA_HOME}/data/CharLOTTE_occitan/fr-oc/test.oc.txt
+fr,oc,${DATA_HOME}/data/CharLOTTE_data/fr-oc/test.fr.txt,${DATA_HOME}/data/CharLOTTE_data/fr-oc/test.oc.txt

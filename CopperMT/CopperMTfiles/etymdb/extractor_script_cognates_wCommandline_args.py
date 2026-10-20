@@ -37,7 +37,8 @@ path_link = os.path.join(path_to_etymdb, "etymdb_links_info.csv")
 df_values = pd.read_csv(path_values,
                         sep='\t',
                         names=["id", "lang", "field", "lexeme", "meaning"],
-                        dtype={"id": int, "lang": str, "field": int, "meaning": str}).set_index("id")
+                        dtype={"id": int, "lang": str, "field": int, "meaning": str},
+                        on_bad_lines='skip').set_index("id")
 df_link = pd.read_csv(path_link,
                       sep='\t',
                       names=["relation_type", "child", "parent"],
@@ -64,7 +65,7 @@ print("Cognate set cleaned")
 
 
 # Cognates values
-folder_path = os.path.join(out_path, f"{data_name}_{datetime.datetime.now().date()}")
+folder_path = os.path.join(out_path, f"{data_name}")
 try:
     os.mkdir(folder_path)
 except FileExistsError:

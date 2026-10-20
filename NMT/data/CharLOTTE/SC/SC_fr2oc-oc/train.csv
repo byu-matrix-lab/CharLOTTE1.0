@@ -1,2 +1,2 @@
 src_lang,tgt_lang,src_path,tgt_path
-fr,oc,${DATA_HOME}/data/CharLOTTE_occitan/fr-oc/train.fr.SC_{SC_MODEL_ID}_fr2oc.txt,${DATA_HOME}/data/CharLOTTE_occitan/fr-oc/train.oc.txt
+fr,oc,${DATA_HOME}/data/CharLOTTE_data/fr-oc/train.fr.SC_{SC_MODEL_ID}_fr2oc.txt,${DATA_HOME}/data/CharLOTTE_data/fr-oc/train.oc.txt

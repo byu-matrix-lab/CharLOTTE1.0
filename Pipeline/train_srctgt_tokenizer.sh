@@ -1,4 +1,5 @@
 #!/bin/bash
+source .env
 set -e
 echo "Starting-----------------------"
 date
@@ -7,6 +8,8 @@ echo "-------------------------------"
 # ARGUMENTS
 config_file=$1
 source $config_file # .cfg file from Pipeline/cfg/tok
+
+mkdir -p $TOK_TRAIN_DATA_DIR
 
 echo "Arguments:-"
 echo "    SPM_TRAIN_SIZE=$SPM_TRAIN_SIZE"

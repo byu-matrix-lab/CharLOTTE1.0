@@ -3,6 +3,7 @@
 set -e
 
 source .env
+export CHARLOTTE_HOME DATA_HOME
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 
@@ -66,6 +67,7 @@ echo "    ###############################################"
 
 cd $MODULE_HOME_DIR
 conda activate char1.0
+export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
 
 # 2.1 Clear and remake COGNATE_TRAIN dir
 echo ""
@@ -78,7 +80,7 @@ then
     rm -r $COGNATE_TRAIN
 fi
 echo "creating ${COGNATE_TRAIN}"
-mkdir $COGNATE_TRAIN
+mkdir -p $COGNATE_TRAIN
 
 
 COGNATE_DIR=${COGNATE_TRAIN}/cognate
@@ -327,7 +329,7 @@ then
     rm -r $COPPER_DIR
 fi
 echo "creating ${COPPER_DIR}"
-mkdir $COPPER_DIR
+mkdir -p $COPPER_DIR
 mkdir ${COPPER_DIR}/inputs
 mkdir ${COPPER_DIR}/inputs/split_data
 mkdir ${COPPER_DIR}/inputs/parameters
@@ -339,6 +341,7 @@ echo "# 3.2.2 Copy the RNN hyperparams set file, corresponding to RNN_HYPERPARAM
 if [ -d $RNN_HYPERPARAMS ]
 then
     # cp -r $RNN_HYPERPARAMS ${COPPER_DIR}/inputs/parameters/bilingual_default/default_parameters_rnn_${SRC}-${TGT}.txt
+    echo "RNN HYPERPARMS: $RNN_HYPERPARAMS"
     python Pipeline/copy_rnn_hyperparams.py \
         --rnn_hyperparam_id $RNN_HYPERPARAMS_ID \
         --rnn_hyperparams_dir $RNN_HYPERPARAMS \
@@ -414,6 +417,7 @@ python Pipeline/cognate_dataset_log.py \
 # 3.2.6 Write the CopperMT parameters file
 echo ""
 echo "# 3.2.6 Write the CopperMT parameters file #"
+mkdir -p $PARAMETERS_DIR
 PARAMETERS_F="${PARAMETERS_DIR}/parameters.${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}.cfg"
 python Pipeline/write_scripts.py \
     --src ${SRC} \
@@ -429,7 +433,8 @@ python Pipeline/write_scripts.py \
 echo ""
 echo "# 3.2.7 Train the SC model with CopperMT #"
 # train SC model
-conda activate copper
+conda activate cop_mt
+export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
 echo "-- Training SC MODEL --"
 echo "    TYPE=$SC_MODEL_TYPE"
 echo "    PARAMETERS_F=$PARAMETERS_F"
@@ -484,7 +489,7 @@ done
 echo ""
 echo ""
 echo "######## 4.2 Run inference on the val set ########"
-conda activate copper
+conda activate cop_mt
 cd ${COPPERMT_DIR}/pipeline
 SPLIT_DATA=${COPPERMT_DATA_DIR}/${SC_MODEL_ID}_${SC_MODEL_TYPE}-${RNN_HYPERPARAMS_ID}_S-${SEED}/inputs/split_data/${SRC}_${TGT}/${SEED}
 #### TEST SC ####
@@ -529,7 +534,7 @@ then
 fi
 
 # 4.3 Calculate scores
-conda activate copper
+conda activate cop_mt
 echo ""
 echo ""
 echo "######## 4.3 Calculate scores ########"
