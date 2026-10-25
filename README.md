@@ -1,76 +1,94 @@
 # CharLOTTE
+
 This is the codebase for **CharLOTTE:** (**Char**acter-**L**evel **O**rthographic **T**ransfer for **T**ranslation **E**nhancement), a system for enhancing knowledge transfer from a high to a low-resource language in NMT by leveraging orthographic correspondence patterns.
 
-See our [paper], referenced below, for an explanation of the method.
+See our [paper](https://aclanthology.org/2026.emnlp-main.1630/), referenced below, for an explanation of the method.
 
 This repository was tested on **Red Hat Enterprise Linux 9.6 (Plow)**.
 
 > **_NOTE:_** We provide documentation for the option of running parts of the pipeline on an HPC cluster. You may need to edit the SBATCH parameters of the respective bash scripts to configure your qos, gpus, memory, etc.
 
 ## License
+
 CharLOTTE is released under the MIT License (see `LICENSE`).
 The subfolders in `CopperMT/CopperMTfiles/` contain scripts derived from
 [CopperMT](https://github.com/clefourrier/CopperMT) and are licensed
 under GPL-3.0 (see `CopperMT/CopperMTfiles/LICENSE`). `CopperMT/CopperMTfiles/copy_files.py` is part of CharLOTTE and is MIT-licensed.
 
 # Installation
+
 This codebase uses and expects *Conda* environments. The *setup.sh* assumes Conda is already installed and will create two environments `char1.0` and `cop_mt`. It will also install the [CopperMT](https://github.com/clefourrier/CopperMT) (and copy our modified/derived scripts into it), [Fast Align](https://github.com/clab/fast_align), and [BYU Matrix Data Cleaning Pipeline](https://github.com/byu-matrix-lab/data-cleaning-pipeline) codebases.
+
 ```
 bash setup.sh
 ```
 
 # Downloading and Preparing Data
+
 **Download and clean data**
 
 Not on HPC:
+
 ```
 bash data/prepare_data.sh
 ```
+
 On HPC:
+
 ```
 bash data/prepare_data_sbatch.sh
 ```
+
 > **_NOTE:_** edit SBATCH parameters in *data/clean_data_sbatch.sh* (called from *prepare_data_sbatch*) as needed.
 
 **Once data is downloaded and cleaned, make the datasets**
 
 Not on HPC:
+
 ```
 bash data/make_training_data.sh
 ```
+
 On HPC:
+
 ```
 sbatch data/make_training_data_sbatch.sh
 ```
-> **_NOTE:_** edit SBATCH parameters in *data/make_training_data_sbatch.sh* as needed.
 
+> **_NOTE:_** edit SBATCH parameters in *data/make_training_data_sbatch.sh* as needed.
 
 # Experiments
 
 To create the OC training scripts, run:
+
 ```
 bash Pipeline/sh/conduct_hyperparam_search_space.sh
 ```
+
 This will ONLY create the training scripts for each OC model in the hyperparameter search space. Continue on to section **CharLOTTE and Baseline Pipelines** to train and run the selected models reported in our paper.
 
 If you actually want to run the OC hyperparameter search yourself using an HPC cluster, run this instead:
+
 ```
 bash Pipeline/sh/conduct_hyperparam_search_space.sh run
 ```
+
 > **_NOTE:_** To edit the SBATCH parameters used, edit the **SBATCH_TEMPLATE** string in *Pipeline/make_hyperparam_search_space.py*.
 
 Then compile the results for the hyperparameter search:
+
 ```
 bash Pipeline/sh/compile_hyperparam_search_results.sh
 ```
+
 The results will appear in *Pipeline/hyperparam_search_results*
 
-
-
 ## CharLOTTE and Baseline Pipelines
+
 The documentation will demonstrate how to reproduce our results for the *es/an→en* scenario, with notes on how to run the *fr/mfe→en*, *fr/oc→en*, and *uz/kaa→en* scenarios.
 
 ### Train OC Model
+
 For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
 
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
@@ -78,17 +96,21 @@ For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
 For the *uz/kaa→en* scenario, replace *"es-an.213.cfg"* with *"uz-kaa.264.cfg"*
 
 Not on HPC:
+
 ```
 bash Pipeline/train_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
 ```
 
 On HPC:
+
 ```
 sbatch Pipeline/sbatch/hyperparam_search/es-an.213.cfg.sh
 ```
+
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 ### Reshape Parent Language
+
 For the *fr/mfe→en* scenario, replace *"es-an.213.cfg"* with *"fr-mfe.102.cfg"*
 
 For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
@@ -96,49 +118,57 @@ For the *fr/oc→en* scenario, replace *"es-an.213.cfg"* with *"fr-oc.251.cfg"*
 For the *uz/kaa→en* scenario, replace *"es-an.213.cfg"* with *"uz-kaa.264.cfg"*
 
 Not on HPC:
+
 ```
 bash Pipeline/pred_SC.sh Pipeline/cfg/SC-HYPERPARAM_SEARCH/es-an.213.cfg
 ```
 
 On HPC:
+
 ```
 sbatch Pipeline/sbatch/predict/es-an.213.cfg.sh
 ```
 
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
-### OC Model Characterization ###
+### OC Model Characterization
+
 To run the OC N-Gram Correspondence Characterization on a single language pair:
 
 ```
 bash Ngram_Correspondences/sh/es-an.sh
 ```
+
 For the *fr/mfe→en* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
 
 For the *fr/oc→en* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
 
 For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
 
-
 To run on all 4 language pairs at once:
+
 ```
 bash Ngram_Correspondences/sh/all.sh
 ```
 
 ### Evaluate OC Models on True Cognate Pairs
+
 To evaluate on true cognates from CogNet and Etymdb on a single language pair:
 
 Prepare the data and run inference:
 
 On HPC:
+
 ```
 bash Pipeline/true_cognate/sbatch/prepare_cognate_test.es-an.sh
 ```
 
 Not on HPC:
+
 ```
 bash Pipeline/true_cognate/sh/prepare_cognate_test.es-an.sh
 ```
+
 For the *fr/mfe* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
 
 For the *fr/oc* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
@@ -146,9 +176,11 @@ For the *fr/oc* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
 To run all scenarios together, replace *"es-an.sh"* with *"all.sh"*
 
 Evaluate the true cognate pairs:
+
 ```
 bash Pipeline/true_cognate/sh/eval_cognate_test.es-an.sh
 ```
+
 For the *fr/mfe* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
 
 For the *fr/oc* scenario, replace *"es-an.sh"* with *"fr-oc.sh"*
@@ -159,8 +191,8 @@ Results will be written to Pipeline/true_cognate/cognate_eval_results.txt
 
 **CogNet and Etymdb do not have data for uz-kaa**
 
-
 ### Train NMT Tokenizers
+
 **Tokenizers for transfer learning and simple baseline NMT models:**
 
 For the *fr/mfe→en* scenario, replace *"es-an_en"* with *"fr-mfe_en"*
@@ -188,24 +220,29 @@ bash Pipeline/train_srctgt_tokenizer.sh Pipeline/cfg/tok/es2an-an_en.cfg
 **You can also optionally train all tokenizers at once by running *Pipeline/train_all_tokenizers.sh*:**
 
 Not on HPC:
+
 ```
 bash Pipeline/train_all_tokenizers.sh
 ```
 
 On HPC:
+
 ```
 sbatch Pipeline/train_all_tokenizers.sh
 ```
+
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
-
 ### NMT Training and Testing
+
 First, make the training scripts with *NMT/make_sbatch.py*:
 
 You can optionally include your qos with the --qos flag if you intend to train on an HPC cluster.
+
 ```
 python NMT/make_sbatch.py [--qos {your qos}]
 ```
+
 > **_NOTE:_** You may edit the **sbatch_template** string in *NMT/make_sbatch.py*  to accomodate for your HPC resources as needed.
 
 The following scripts should now be created. They were written to run on an HPC cluster. The scripts themselves make the sbatch commands, so you will simply invoke them with "bash". If not running on an HPC cluster, simply edit the scripts, replacing "sbatch" with "bash".
@@ -217,87 +254,111 @@ For the *fr/oc→en* scenario, replace *"an-en"* in each of the script paths bel
 For the *uz/kaa→en* scenario, replace *"an-en"* in each of the script paths below with *"kaa-en"*
 
 ##### Simple baseline model
+
 Train:
+
 ```
 bash NMT/sbatch/TRAIN/an-en/all_NMT.sh
 ```
 
 Then when done, test:
+
 ```
 bash NMT/sbatch/TEST/an-en/all_NMT.sh
 ```
 
 ##### Transfer learning baseline and CharLOTTE models
+
 Pre-train both the CharLOTTE and baseline parent models:
+
 ```
 bash NMT/sbatch/TRAIN/an-en/all_PRETRAIN.sh
 ```
 
 When done, run testing on the pre-trained models. You MUST do this before fine-tuning since it will evaluate the pre-trained models on their respective validation sets so that the training script knows which pre-trained checkpoint to select for fine-tuning:
+
 ```
 bash NMT/sbatch/TEST/an-en/all_PRETRAIN.sh
 ```
 
 When done, fine-tune both the CharLOTTE and baseline child models:
+
 ```
 bash NMT/sbatch/TRAIN/an-en/all_FINETUNE.sh
 ```
 
 When done, test the child models:
+
 ```
 bash NMT/sbatch/TEST/an-en/all_FINETUNE.sh
 ```
 
 #### Reverse translation directions
+
 To train the NMT models that translate into the low-resource directions, i.e. *en→es/an*, *en→fr/mfe*, *en→fr/oc*, *en→uz/kaa* you will do the same but with different paths:
 
 ##### Simple baseline model
+
 Train:
+
 ```
 bash NMT/sbatch/TRAIN.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_NMT.sh
 ```
 
 Then when done, test:
+
 ```
 bash NMT/sbatch/TEST.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_NMT.sh
 ```
 
 ##### Transfer learning baseline and CharLOTTE models
+
 Pre-train both the CharLOTTE and baseline parent models:
+
 ```
 bash NMT/sbatch/TRAIN.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_PRETRAIN.sh
 ```
 
 When done, run testing on the pre-trained models. You MUST do this before fine-tuning since it will evaluate the pre-trained models on their respective validation sets so that the training script knows which pre-trained checkpoint to select for fine-tuning:
+
 ```
 bash NMT/sbatch/TEST.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_PRETRAIN.sh
 ```
 
 When done, fine-tune both the CharLOTTE and baseline child models:
+
 ```
 bash NMT/sbatch/TRAIN.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_FINETUNE.sh
 ```
 
 When done, test the child models:
+
 ```
 bash NMT/sbatch/TEST.REVERSE_SRC_TGT/an-en.REVERSE_SRC_TGT/all_FINETUNE.sh
 ```
 
 # Compile Scores
+
 Compile scores for all NMT Models:
+
 ```
 bash NMT/compile_results.sh
 ```
+
 Scores will be written to NMT_results.txt
 
 # Compile BLEURT Scores
+
 On HPC:
+
 ```
 sbatch bleurt/bleurt_sbatch.sh
 ```
+
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 Not on HPC:
+
 ```
 bash bleurt/run_bleurt.sh
 ```
@@ -305,12 +366,15 @@ bash bleurt/run_bleurt.sh
 Results will be written to bleurt/bleurt_results_with_significance.txt
 
 # Additional Tests
+
 ## Vocabulary Overlap
+
 Get Jensen-Shannon divergence and Jaccard similarity to measure vocabulary overlap between PL and CL compared to PL' and CL.
 
 Not on HPC:
 
 To run for a single language pair:
+
 ```
 bash NMT/vocab_overlap/token_overlap_spm.es-an.sh
 ```
@@ -326,9 +390,11 @@ For the *uz/kaa→en* scenario, replace *"es-an.sh"* with *"uz-kaa.sh"*
 On HPC:
 
 To run for a single language pair:
+
 ```
 sbatch NMT/vocab_overlap/token_overlap_spm.es-an.sh
 ```
+
 > **_NOTE:_** You may need to edit the SBATCH parameters in the file referenced above.
 
 For the *fr/mfe→en* scenario, replace *"es-an.sh"* with *"fr-mfe.sh"*
@@ -346,3 +412,27 @@ bash NMT/vocab_overlap/compile_token_overlap.sh
 ```
 
 Results will be printed to NMT/vocab_overlap/results/vocab_overlap_results_summary.txt
+
+# Citation
+If you use this code, please cite our work:
+```
+@inproceedings{hatch-etal-2026-charlotte,
+    title = "{C}har{LOTTE}: Orthographic Correspondence-Based Data Unification Enhances Cross-Lingual Transfer in Low-Resource {NMT}",
+    author = "Hatch, Brendan T.  and
+      Bickel, Peter K.  and
+      Ringger, Eric K.  and
+      Richardson, Stephen D.",
+    editor = "Lee, Hung-Yi  and
+      Dev, Sunipa  and
+      Li, Jessy  and
+      Elliott, Desmond",
+    booktitle = "Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing",
+    month = oct,
+    year = "2026",
+    address = "Budapest, Hungary",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2026.emnlp-main.1630/",
+    pages = "37061--37086",
+    ISBN = "979-8-89176-459-0"
+}
+```
